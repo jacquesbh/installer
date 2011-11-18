@@ -4,7 +4,7 @@
  * @license All rights reserved
  * @author Jacques Bodin-Hullin <jacques@bodin-hullin.fr>
  * @package Installer
- * @copyright Copyright (c) 2011 MarsGuys (http://marsguys.fr)
+ * @copyright Copyright (c) 2011 Jacques Bodin-Hullin (http://bodin-hullin.net)
  */
 
 // TOTO system.xml
