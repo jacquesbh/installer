@@ -1921,13 +1921,13 @@ BEGIN module_xml
 {COPYRIGHT}
 -->
 <config>
-  <modules>
-    <{Module_Name}>
-      <active>true</active>
-      <codePool>{pool}</codePool>
-      <depends/>
-    </{Module_Name}>
-  </modules>
+    <modules>
+        <{Module_Name}>
+            <active>true</active>
+                <codePool>{pool}</codePool>
+            <depends/>
+        </{Module_Name}>
+    </modules>
 </config>
 END module_xml
 
@@ -1937,17 +1937,16 @@ BEGIN config_xml
 {COPYRIGHT}
 -->
 <config>
-  <modules>
-    <{Module_Name}>
-      <version>0.1.0</version>
-    </{Module_Name}>
-    <depends></depends>
-  </modules>
-  <global></global>
-  <frontend></frontend>
-  <admin></admin>
-  <adminhtml></adminhtml>
-  <default></default>
+    <modules>
+        <{Module_Name}>
+            <version>0.1.0</version>
+        </{Module_Name}>
+    </modules>
+    <global/>
+    <frontend/>
+    <admin/>
+    <adminhtml/>
+    <default/>
 </config>
 END config_xml
 
