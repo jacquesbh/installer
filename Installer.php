@@ -1611,7 +1611,7 @@ HELP;
                         )) . "\n\n" . $this->getTag('new_var');
                     }
                     $content = str_replace($this->getTag('new_var'), $var, $content);
-                } elseif (preg_match('`^(_?)([a-z_]+)(\(\))?(?::([0-9a-z.]*))?(?:/(p))?$`i', $name, $match)) { // Method
+                } elseif (preg_match('`^(_?)([a-z_]+)(\(\))?(?::([0-9a-zA-Z._]*))?(?:/(p))?$`i', $name, $match)) { // Method
                     $vars = false;
                     $return = '';
                     $name = $match[2];
