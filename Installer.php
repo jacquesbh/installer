@@ -2237,7 +2237,7 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Grid_Contai
 
         $this->_blockGroup = '{blockGroup}';
         $this->_controller = '{controller}';
-        $this->_headerText = $this->_('');
+        $this->_headerText = $this->__('');
 
         return $this;
     }
