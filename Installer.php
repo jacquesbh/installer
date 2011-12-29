@@ -2280,7 +2280,7 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Grid
      */
     public function getCollection()
     {
-        if (!$this->getCollection()) {
+        if (!parent::getCollection()) {
             $collection = Mage::getResourceModel('{resource_model_collection}');
             $this->setCollection($collection);
         }
