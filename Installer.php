@@ -1635,7 +1635,7 @@ HELP;
                             '{name}' => $name,
                             '{params}' => $vars,
                             '{return}' => $return,
-                            '// Code here' => (!$useParent ? '' : "parent::$name($vars);\n        ") . '// Code here'
+                            '// Code here' => (!$useParent ? '' : "parent::_$name($vars);\n        ") . '// Code here'
                         )) . "\n\n" . $this->getTag('new_method');
                     } else {
                         $method = $this->getTemplate('public_method', array(
