@@ -325,7 +325,8 @@ HELP;
         $this->_processResources(array());
 
         $config = $this->getConfig();
-        $entities = $config->global->models->{strtolower($this->getModuleName() . '_mysql4')}->entities;
+        $resourceModel = $config->global->models->{strtolower($this->getModuleName())}->resourceModel;
+        $entities = $config->global->models->{$resourceModel}->entities;
         if (!$entities->{strtolower($entity)}) {
             $this->_processEntity(array($entity));
         }
