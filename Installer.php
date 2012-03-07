@@ -701,6 +701,9 @@ HELP;
     {
         if (empty($params)) {
             $where = $this->prompt('Where? (enter for front)');
+            if (empty($where)) {
+                $where = 'front';
+            }
         } else {
             $where = array_shift($params);
         }
