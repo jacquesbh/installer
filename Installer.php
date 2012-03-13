@@ -1237,6 +1237,11 @@ HELP;
 
     protected function _processAddTranslate()
     {
+        $config = $this->getConfig();
+        if (!isset($config->frontend->translate) && !isset($config->adminhtml->translate)) {
+            $this->_processTranslate(array());
+        }
+
         do {
             $translate = $this->prompt('Translate?');
         } while (empty($translate));
