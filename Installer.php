@@ -23,11 +23,13 @@ defined('LOCALES')              || define('LOCALES', getenv('LOCALES') ? getenv(
 defined('OS')                   || define('OS', getenv('OS') ? getenv('OS') : (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'windows' : 'unix'));
 defined('DEBUG_ENABLED')        || define('DEBUG_ENABLED', getenv('DEBUG_ENABLED') ? getenv('DEBUG_ENABLED') : false);
 
-function red()      { return (OS == 'unix') ? "\033[01;31m" : ""; }
-function yellow()   { return (OS == 'unix') ? "\033[01;33m" : ""; }
-function blue()     { return (OS == 'unix') ? "\033[01;34m" : ""; }
-function green()    { return (OS == 'unix') ? "\033[01;32m" : ""; }
-function white()    { return (OS == 'unix') ? "\033[00m" : ""; }
+function red()      { return isUnix() ? "\033[01;31m" : ""; }
+function yellow()   { return isUnix() ? "\033[01;33m" : ""; }
+function blue()     { return isUnix() ? "\033[01;34m" : ""; }
+function green()    { return isUnix() ? "\033[01;32m" : ""; }
+function white()    { return isUnix() ? "\033[00m" : ""; }
+
+function isUnix()   { return (OS == 'unix'); }
 
 function debug($var) { if (DEBUG_ENABLED) { echo "\n\n" . green(); var_dump($var); echo white() . "\n\n"; } }
 
@@ -53,6 +55,9 @@ class Installer
     public function __construct(array $argv)
     {
         echo green() . COMPANY_NAME . " Installer - v" . $this->getVersion() . " - by jacquesbh\n";
+        if (isUnix()) {
+            echo "\033]0;" . COMPANY_NAME . " Installer" . "\007";
+        }
         if (!is_dir($this->getAppDir())) {
             echo red() . "Bad execution path.\n";
             exit;
