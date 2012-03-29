@@ -1933,7 +1933,7 @@ BEGIN module_xml
     <modules>
         <{Module_Name}>
             <active>true</active>
-                <codePool>{pool}</codePool>
+            <codePool>{pool}</codePool>
             <depends/>
         </{Module_Name}>
     </modules>
