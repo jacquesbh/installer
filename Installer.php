@@ -1293,6 +1293,7 @@ HELP;
         $config = $this->getConfig();
 
         if (!isset($config->{$where}->translate)) {
+            $this->_processHelper(array('data', '-'));
             $config->{$where}
                 ->addChild('translate')
                 ->addChild('modules')
