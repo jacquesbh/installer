@@ -741,7 +741,8 @@ HELP;
         }
 
         // Module
-        if (!$moduleRoute = $routers->{strtolower($this->getModuleName())}) {
+        $routerName = strtolower($this->getModuleName()) . ($where == 'admin' : '_adminhtml' : '');
+        if (!$moduleRoute = $routers->{$routerName}) {
             $moduleRoute = $routers->addChild(strtolower($this->getModuleName()));
         }
 
