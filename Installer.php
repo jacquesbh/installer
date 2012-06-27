@@ -1520,7 +1520,7 @@ HELP;
             if (!is_file($phtmlFilename)) {
                 file_put_contents($phtmlFilename, $this->getTemplate('phtml', array('{Name}' => implode('_', $names) . (empty($names) ? '' : '_') . $name)));
             }
-            $type = lcfirst($this->_namespace) . '_' . lcfirst($this->_module) . '/' . implode('_', array_map('lcfirst', explode('_', $officialName)));
+            $type = lcfirst($this->_namespace) . '_' . strtolower($this->_module) . '/' . implode('_', array_map('lcfirst', explode('_', $officialName)));
             echo "\n" . white() . '<block type="' . red() . $type . white() . '" name="' . lcfirst($name) . '" as="' . red() . lcfirst($name) . white() . '" template="' . red() . $phtmlFilepath . white() . '" />' . "\n\n";
         }
 
