@@ -757,7 +757,7 @@ HELP;
 
         // module
         if (!$args->module) {
-            $args->addChild('module', $this->getModuleName());
+            $args->addChild('module', $this->getModuleName() . ($where == 'admin' ? '_Adminhtml' : ''));
         }
 
         // frontName
