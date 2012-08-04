@@ -1234,7 +1234,9 @@ HELP;
                 }
             }
 
-            file_put_contents($dir . 'layout/' . $file, $this->getTemplate('layout_xml'));
+            if (!file_exists($dir . 'layout/' . $file)) {
+                file_put_contents($dir . 'layout/' . $file, $this->getTemplate('layout_xml'));
+            }
         }
 
         $this->_processReloadConfig();
