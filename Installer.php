@@ -7,8 +7,8 @@
  * @copyright Copyright (c) 2011 Jacques Bodin-Hullin (http://bodin-hullin.net)
  */
 
-// TOTO system.xml
-// TOTO adminhtml.xml
+// TODO system.xml
+// TODO adminhtml.xml
 
 ini_set('date.timezone', 'Europe/Paris');
 
