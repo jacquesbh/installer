@@ -13,6 +13,7 @@
 ini_set('date.timezone', 'Europe/Paris');
 
 defined('PWD')                  || define('PWD', getenv('PWD'));
+defined('LICENSE')              || define('LICENSE', getenv('LICENSE') ? getenv('LICENSE') : 'All rights reserved');
 defined('USER_EMAIL')           || define('USER_EMAIL', getenv('USER_EMAIL') ? getenv('USER_EMAIL') : '');
 defined('USER_NAME')            || define('USER_NAME', getenv('USER_NAME') ? getenv('USER_NAME') : '');
 defined('DESIGN')               || define('DESIGN', getenv('DESIGN') ? getenv('DESIGN') : 'mg_default');
@@ -1808,6 +1809,7 @@ HELP;
             '<_?php' => '<?php',
             '<_?xml' => '<?xml',
             '{Module_Name}' => $this->getModuleName(),
+            '{LICENSE}' => LICENSE,
             '{USER_NAME}' => utf8_encode(USER_NAME),
             '{USER_EMAIL}' => USER_EMAIL,
             '{Namespace}' => $this->_namespace,
@@ -1923,7 +1925,7 @@ BEGIN copyright
 /**
  * This file is part of {Module_Name} for Magento.
  *
- * @license All rights reserved
+ * @license {LICENSE}
  * @author {USER_NAME} <{USER_EMAIL}>
  * @category {Namespace}
  * @package {Module_Name}
