@@ -836,9 +836,9 @@ HELP;
             @unlink($this->getAppDir() . 'etc/modules/' . $this->getModuleName() . '.xml');
             $this->_rmdir($this->getDesignDir('frontend') . strtolower($this->getModuleName()));
             $this->_rmdir($this->getDesignDir('adminhtml') . strtolower($this->getModuleName()));
-            @unlink($this->getAppDir() . 'locale/fr_FR/' . $this->getModuleName() . '.csv');
-            @unlink($this->getAppDir() . 'locale/en_US/' . $this->getModuleName() . '.csv');
-            @unlink($this->getAppDir() . 'locale/de_DE/' . $this->getModuleName() . '.csv');
+            foreach ($this->getLocales() as $locale) {
+                @unlink($this->getAppDir() . 'locale/' . $locale . '/' . $this->getModuleName() . '.csv');
+            }
             $this->_namespace = null;
             $this->_module = null;
             $this->_pool = null;
