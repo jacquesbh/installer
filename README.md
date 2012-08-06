@@ -10,18 +10,19 @@ NOTE: This is the first version. Any idea for the second one?
 
 ### Bash function required
 
-    ```sh
-    function jbh () {
-        export USER_EMAIL="jacques@bodin-hullin.net"
-        export USER_NAME="Jacques Bodin-Hullin"
-        export DESIGN="base_default"
-        export COMPANY_NAME="Jacques Bodin-Hullin"
-        export COMPANY_NAME_SHORT="Jbh"
-        export COMPANY_URL="http://jacques.sh/"
-        export LOCALES="fr_FR,en_US"
-        /usr/local/bin/php -f ~/.bin/Installer/Installer.php $@;
-    }
-    ```
+```sh
+function jbh () {
+    export USER_EMAIL="jacques@bodin-hullin.net"
+    export USER_NAME="Jacques Bodin-Hullin"
+    export DESIGN="base_default"
+    export COMPANY_NAME="Jacques Bodin-Hullin"
+    export COMPANY_NAME_SHORT="Jbh"
+    export COMPANY_URL="http://jacques.sh/"
+    export LOCALES="fr_FR,en_US"
+    # ==> /!\ the Installer path ;)
+    /usr/local/bin/php -f ~/.bin/Installer/Installer.php $@;
+}
+```
 
 ### Run it!
 
