@@ -39,7 +39,7 @@ function debug($var) { if (DEBUG_ENABLED) { echo "\n\n" . green(); var_dump($var
 class Installer
 {
 
-    const VERSION = '1.3.5.2.2';
+    //const VERSION = '1.3.5.2.2';
 
     protected $_templates;
 
@@ -57,9 +57,10 @@ class Installer
 
     public function __construct(array $argv)
     {
-        echo green() . COMPANY_NAME . " Installer - v" . $this->getVersion() . " - by jacquesbh\n";
+        //echo green() . COMPANY_NAME . " Installer - v" . $this->getVersion() . " - by jacquesbh\n";
+        echo green() . "The Installer - by jacquesbh\n";
         if (isUnix()) {
-            echo "\033]0;" . COMPANY_NAME . " Installer" . "\007";
+            echo "\033]0;" . "The Installer" . "\007";
         }
         if (!is_dir($this->getAppDir())) {
             echo red() . "Bad execution path.\n";
