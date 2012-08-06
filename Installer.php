@@ -7,6 +7,8 @@
  * @copyright Copyright (c) 2011 Jacques Bodin-Hullin (http://bodin-hullin.net)
  */
 
+declare( ticks = 1 );
+
 // TODO system.xml
 // TODO adminhtml.xml
 
@@ -1905,12 +1907,14 @@ HELP;
         return $this->_read(false);
     }
 
-    protected function _read($prompt = true)
+    protected function _read($usePrompt = true)
     {
-        if ($prompt) {
-            echo white() . $this->getModuleName() . red(), '> ', white();
+        $prompt = null;
+        if ($usePrompt) {
+            $prompt = white() . $this->getModuleName() . red() . '> ' . white();
         }
-        $line = trim(fgets(STDIN));
+        $line = trim(readline($prompt));
+        readline_add_history($line);
         $continue = false;
         return $line;
     }
