@@ -1,10 +1,11 @@
 #!/usr/bin/php
 <?php
 /**
- * @license All rights reserved
- * @author Jacques Bodin-Hullin <jacques@bodin-hullin.fr>
+ * @license ALL RIGHTS RESERVED - Commercial use only with my approbation
+ *
+ * @author Jacques Bodin-Hullin <jacques@bodin-hullin.net>
  * @package Installer
- * @copyright Copyright (c) 2011 Jacques Bodin-Hullin (http://bodin-hullin.net)
+ * @copyright Copyright (c) 2011-2012 Jacques Bodin-Hullin (http://jacques.sh)
  */
 
 declare( ticks = 1 );
@@ -18,7 +19,7 @@ defined('PWD')                  || define('PWD', getenv('PWD'));
 defined('LICENSE')              || define('LICENSE', getenv('LICENSE') ? getenv('LICENSE') : 'All rights reserved');
 defined('USER_EMAIL')           || define('USER_EMAIL', getenv('USER_EMAIL') ? getenv('USER_EMAIL') : '');
 defined('USER_NAME')            || define('USER_NAME', getenv('USER_NAME') ? getenv('USER_NAME') : '');
-defined('DESIGN')               || define('DESIGN', getenv('DESIGN') ? getenv('DESIGN') : 'mg_default');
+defined('DESIGN')               || define('DESIGN', getenv('DESIGN') ? getenv('DESIGN') : 'base_default');
 defined('COMPANY_NAME')         || define('COMPANY_NAME', getenv('COMPANY_NAME') ? getenv('COMPANY_NAME') : '');
 defined('COMPANY_NAME_SHORT')   || define('COMPANY_NAME_SHORT', getenv('COMPANY_NAME_SHORT') ? getenv('COMPANY_NAME_SHORT') : '');
 defined('COMPANY_URL')          || define('COMPANY_URL', getenv('COMPANY_URL') ? getenv('COMPANY_URL') : '');

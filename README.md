@@ -1,5 +1,7 @@
 # The Installer
 
+->PERSONNAL USAGE ONLY - For professional or commercial use, ask.<-
+
 ## What's that?
 
 The "Installer" is a *simple* shell which allows you to create custom modules on Magento.
