@@ -1915,7 +1915,9 @@ HELP;
             $prompt = white() . $this->getModuleName() . red() . '> ' . white();
         }
         $line = trim(readline($prompt));
-        readline_add_history($line);
+        if (!empty($line)) {
+            readline_add_history($line);
+        }
         $continue = false;
         return $line;
     }
