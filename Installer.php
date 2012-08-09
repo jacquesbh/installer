@@ -334,6 +334,9 @@ HELP;
         $this->_processResources(array());
 
         $config = $this->getConfig();
+        if (!isset($config->global)) {
+            $config->addChild('global');
+        }
         $resourceModel = $config->global->models->{strtolower($this->getModuleName())}->resourceModel;
         $entities = $config->global->models->{$resourceModel}->entities;
         if (!$entities->{strtolower($entity)}) {
@@ -447,7 +450,7 @@ HELP;
         echo $r . str_repeat('-', $width) . "\n";
 
         // Helpers
-        if ($config->global->helpers) {
+        if ($config->global && $config->global->helpers) {
             echo $g . "Helpers\n";
             foreach ($config->global->helpers->children() as $child) {
                 $namespace = $child->getName();
@@ -468,7 +471,7 @@ HELP;
         }
 
         // Blocks
-        if ($config->global->blocks) {
+        if ($config->global && $config->global->blocks) {
             echo $g . "Blocks\n";
             foreach ($config->global->blocks->children() as $child) {
                 $namespace = $child->getName();
@@ -490,7 +493,7 @@ HELP;
         }
 
         // Models
-        if ($config->global->models) {
+        if ($config->global && $config->global->models) {
             echo $g . "Models\n";
             $resourcesModels = array();
             foreach ($config->global->models->children() as $child) {
@@ -527,12 +530,12 @@ HELP;
         }
 
         // Events
-        if ($config->global->events) {
+        if ($config->global && $config->global->events) {
             $this->_processInfoEvents($config->global->events);
         }
 
         // Resources
-        if ($config->global->resources) {
+        if ($config->global && $config->global->resources) {
             echo green() . "Resources\n";
             foreach ($config->global->resources->children() as $child) {
                 echo $w . $child->getName() . "\n";
@@ -554,7 +557,7 @@ HELP;
         }
 
         // Template
-        if ($config->global->template) {
+        if ($config->global && $config->global->template) {
             if ($config->global->template->email) {
                 // TODO
             }
@@ -567,17 +570,17 @@ HELP;
 
 
         // Routers
-        if ($config->frontend->routers) {
+        if ($config->frontend && $config->frontend->routers) {
             $this->_processInfoRouters($config->frontend->routers);
         }
 
         // Layout
-        if ($config->frontend->layout) {
+        if ($config->frontend && $config->frontend->layout) {
             $this->_processInfoLayout($config->frontend->layout);
         }
 
         // Translate
-        if ($config->frontend->translate) {
+        if ($config->frontend && $config->frontend->translate) {
             $this->_processInfoTranslate($config->frontend->translate);
         }
 
@@ -588,17 +591,17 @@ HELP;
 
 
         // Routers
-        if ($config->admin->routers) {
+        if ($config->admin && $config->admin->routers) {
             $this->_processInfoRouters($config->admin->routers);
         }
 
         // Layout
-        if ($config->adminhtml->layout) {
+        if ($config->admin && $config->adminhtml->layout) {
             $this->_processInfoLayout($config->adminhtml->layout);
         }
 
         // Translate
-        if ($config->adminhtml->translate) {
+        if ($config->admin && $config->adminhtml->translate) {
             $this->_processInfoTranslate($config->adminhtml->translate);
         }
 
@@ -607,7 +610,7 @@ HELP;
         echo $r . "Default System Configuration\n";
         echo $r . str_repeat('-', $width) . "\n";
 
-        if ($config->default) {
+        if ($config->default && $config->default) {
             foreach ($config->default->children() as $namespace) {
                 foreach ($namespace->children() as $section) {
                     foreach ($section->children() as $key) {
@@ -739,6 +742,10 @@ HELP;
         // Config
         $config = $this->getConfig();
 
+        if (!isset($config->{$where})) {
+            $config->addChild($where);
+        }
+
         // Routers
         if (!$routers = $config->{$where}->routers) {
             $routers = $config->{$where}->addChild('routers');
@@ -793,7 +800,11 @@ HELP;
 
         // conf
         /* @var $config SimpleXMLElement */
-        $config = $this->getConfig()->default;
+        $config = $this->getConfig();
+        if (!isset($config->default)) {
+            $config->addChild('default');
+        }
+        $config = $config->default;
 
         $names = explode('/', strtolower($name));
 
@@ -976,6 +987,9 @@ HELP;
 
         // Config
         $config = $this->getConfig();
+        if (!isset($config->{$where})) {
+            $config->addChild($where);
+        }
         $where = $config->{$where};
 
         // Events
@@ -1032,6 +1046,9 @@ HELP;
         }
 
         $config = $this->getConfig();
+        if (!isset($config->global)) {
+            $config->addChild('global');
+        }
         $entities = $config->global->models->{strtolower($this->getModuleName() . '_mysql4')}->entities;
 
         $entity = implode('_', array_map('ucfirst', explode('_', $name)));
@@ -1112,6 +1129,9 @@ HELP;
         list($dir, $created) = $this->getModuleDir('sql', true);
         $dir = $dir . strtolower($this->getModuleName()) . '_setup/';
         $config = $this->getConfig();
+        if (!isset($config->global)) {
+            $config->addChild('global');
+        }
         $global = $config->global;
 
         if ($created || !is_dir($dir) || !$global->resources || !$global->resources->{strtolower($this->getModuleName()) . '_setup'}) {
@@ -1155,6 +1175,9 @@ HELP;
         list($dir, $created) = $this->getModuleDir('sql', true);
 
         $config = $this->getconfig();
+        if (!isset($config->global)) {
+            $config->addChild('global');
+        }
         $global = $config->global;
         if (!$global->resources || !$global->resources->{strtolower($this->getModuleName()) . '_setup'}) {
             if (!$resources = $global->resources) {
@@ -1207,6 +1230,10 @@ HELP;
 
         $config = $this->getConfig();
 
+        if (!isset($config->{$where})) {
+            $config->addChild($where);
+        }
+
         if (!isset($config->{$where}->layout)) {
             $file = strtolower($this->getModuleName()) . '.xml';
             $config->{$where}
@@ -1250,6 +1277,9 @@ HELP;
     protected function _processAddTranslate()
     {
         $config = $this->getConfig();
+        if (!isset($config->frontend)) {
+            $config->addChild('frontend');
+        }
         if (!isset($config->frontend->translate) && !isset($config->adminhtml->translate)) {
             $this->_processTranslate(array());
         }
@@ -1298,6 +1328,10 @@ HELP;
         }
 
         $config = $this->getConfig();
+
+        if (!isset($config->{$where})) {
+            $config->addChild($where);
+        }
 
         if (!isset($config->{$where}->translate)) {
             $this->_processHelper(array('data', '-'));
@@ -1371,6 +1405,9 @@ HELP;
 
         if ($created) {
             $config = $this->getConfig();
+            if (!isset($config->global)) {
+                $config->addChild('global');
+            }
             $global = $config->global;
             if (!isset($global['models'])) {
                 $global->addChild('models')->addChild(strtolower($this->getModuleName()))->addChild('class', $this->getModuleName() . '_Model');
@@ -1486,6 +1523,9 @@ HELP;
 
         if ($created) {
             $config = $this->getConfig();
+            if (!isset($config->global)) {
+                $config->addChild('global');
+            }
             $global = $config->global;
             if (!isset($global['blocks'])) {
                 $global->addChild('blocks')->addChild(strtolower($this->getModuleName()))->addChild('class', $this->getModuleName() . '_Block');
@@ -1563,6 +1603,9 @@ HELP;
 
         if ($created) {
             $config = $this->getConfig();
+            if (!isset($config->global)) {
+                $config->addChild('global');
+            }
             $global = $config->global;
             if (!isset($global['helpers'])) {
                 $global->addChild('helpers')->addChild(strtolower($this->getModuleName()))->addChild('class', $this->getModuleName() . '_Helper');
@@ -1952,7 +1995,6 @@ BEGIN module_xml
         <{Module_Name}>
             <active>true</active>
             <codePool>{pool}</codePool>
-            <depends/>
         </{Module_Name}>
     </modules>
 </config>
@@ -1969,11 +2011,6 @@ BEGIN config_xml
             <version>0.1.0</version>
         </{Module_Name}>
     </modules>
-    <global/>
-    <frontend/>
-    <admin/>
-    <adminhtml/>
-    <default/>
 </config>
 END config_xml
 
