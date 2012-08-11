@@ -79,15 +79,24 @@ class Installer
 
     public function __construct(array $argv)
     {
-        //echo green() . COMPANY_NAME . " Installer - v" . $this->getVersion() . " - by jacquesbh\n";
+        // Welcome message
         echo green() . "The Installer - by jacquesbh\n";
         if (isUnix()) {
             echo "\033]0;" . "The Installer" . "\007";
         }
+
+        // Execution path
         if (!is_dir($this->getAppDir())) {
             echo red() . "Bad execution path.\n";
             exit;
         }
+
+        // Tidy required
+        if (!function_exists('tidy_parse_string')) {
+            echo red() . "Tidy is required ! http://tidy.sourceforge.net/\n";
+            exit;
+        }
+
         $this->_init($argv);
         $this->_start();
     }
