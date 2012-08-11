@@ -66,6 +66,7 @@ Type `?`!
      | setup                | sql set               |                                           |
      | upgrade              | up                    | [from] to                                 |
      | event                |                       | name model method where                   |
+     | cron                 |                       | identifier 1 2 3 4 5 model method         |
      | default              | def conf              | name value                                |
      | depends              | dep                   | (-)module                                 |
      | exit                 |                       |                                           |
