@@ -37,6 +37,27 @@ function isUnix()   { return (OS == 'unix'); }
 
 function debug($var) { if (DEBUG_ENABLED) { echo "\n\n" . green(); var_dump($var); echo white() . "\n\n"; } }
 
+// Read functions
+if (!function_exists('readline')) {
+    function readline($prompt = '')
+    {
+        if (!empty($prompt) && is_string($prompt)) {
+            echo $prompt;
+        }
+        $fp = fopen("php://stdin", "r");
+        $in = fgets($fp);
+        fclose($fp);
+        return $in;
+    }
+}
+
+if (!function_exists('readline_add_history')) {
+    function readline_add_history($line)
+    {
+        // nothing...
+    }
+}
+
 class Installer
 {
 
