@@ -1,6 +1,6 @@
 # The Installer
 
-->PERSONNAL USAGE ONLY - For professional or commercial use, ask.<-
+PERSONNAL USAGE ONLY - For professional or commercial use, ask.
 
 ## What's that?
 
@@ -97,3 +97,246 @@ Type `?`!
     Jbh_Demo>
 
 Easy, isn't it ?
+
+### Tips
+
+#### Variables?
+
+    Jbh_Tmp> model foo $_iAmProtected $_meToo=1 $iAmPublic $meToo=array $iAmNull=null $iAmAString=foo $_iAmBoolean=false
+
+```php
+<?php
+/**
+[...]
+ */
+
+/**
+ * Foo Model
+ * @package Jbh_Tmp
+ */
+class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
+{
+
+// Jacques Bodin-Hullin Tag NEW_CONST
+
+    /**
+     * short_description_here
+     * @access protected
+     * @var 
+     */
+    protected $_iAmProtected = null;
+
+    /**
+     * short_description_here
+     * @access protected
+     * @var int
+     */
+    protected $_meToo = 1;
+
+    /**
+     * short_description_here
+     * @access public
+     * @var 
+     */
+    public $iAmPublic = null;
+
+    /**
+     * short_description_here
+     * @access public
+     * @var array
+     */
+    public $meToo = array();
+
+    /**
+     * short_description_here
+     * @access public
+     * @var null
+     */
+    public $iAmNull = null;
+
+    /**
+     * short_description_here
+     * @access public
+     * @var string
+     */
+    public $iAmAString = 'foo';
+
+    /**
+     * short_description_here
+     * @access protected
+     * @var bool
+     */
+    protected $_iAmBoolean = false;
+
+// Jacques Bodin-Hullin Tag NEW_VAR
+
+// Jacques Bodin-Hullin Tag NEW_METHOD
+
+}
+```
+
+#### Constants?
+
+    Jbh_Tmp> model foo I_AM_CONSTANT I_AM_A_STRING=foo I_AM_INTEGER=123 I_AM_BOOLEAN=true
+
+```php
+<?php
+/**
+[...]
+ */
+
+/**
+ * Foo Model
+ * @package Jbh_Tmp
+ */
+class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
+{
+
+    /**
+     * short_description_here
+     * @const I_AM_CONSTANT
+     */
+    const I_AM_CONSTANT = null;
+
+    /**
+     * short_description_here
+     * @const I_AM_A_STRING string
+     */
+    const I_AM_A_STRING = 'foo';
+
+    /**
+     * short_description_here
+     * @const I_AM_INTEGER int
+     */
+    const I_AM_INTEGER = 123;
+
+    /**
+     * short_description_here
+     * @const I_AM_BOOLEAN bool
+     */
+    const I_AM_BOOLEAN = true;
+
+// Jacques Bodin-Hullin Tag NEW_CONST
+
+// Jacques Bodin-Hullin Tag NEW_VAR
+
+// Jacques Bodin-Hullin Tag NEW_METHOD
+
+}
+```
+
+#### Methods?
+
+    Jbh_Tmp> model foo _iAmProtected iAmPublic iReturnsBool:bool iReturnsObject:Varien_Object iCallMyParent/p iHaveArgs() iHaveArgsAndIReturnsBool():bool _iHaveArgsIReturnsStringICallDad():string/p
+    Return for iCallMyParent()?
+    > string
+    Params for iHaveArgs()?
+    > $customer
+    Params for iHaveArgsAndIReturnsBool()?
+    > $flag
+    Params for iHaveArgsIReturnsStringICallDad()?
+    > $order
+
+```php
+<?php
+/**
+[...]
+ */
+
+/**
+ * Foo Model
+ * @package Jbh_Tmp
+ */
+class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
+{
+
+// Jacques Bodin-Hullin Tag NEW_CONST
+
+// Jacques Bodin-Hullin Tag NEW_VAR
+
+    /**
+     * short_description_here
+     * @access protected
+     * @return 
+     */
+    protected function _iAmProtected()
+    {
+        // Code here
+    }
+
+    /**
+     * short_description_here
+     * @access public
+     * @return 
+     */
+    public function iAmPublic()
+    {
+        // Code here
+    }
+
+    /**
+     * short_description_here
+     * @access public
+     * @return bool
+     */
+    public function iReturnsBool()
+    {
+        // Code here
+    }
+
+    /**
+     * short_description_here
+     * @access public
+     * @return Varien_Object
+     */
+    public function iReturnsObject()
+    {
+        // Code here
+    }
+
+    /**
+     * short_description_here
+     * @access public
+     * @return string
+     */
+    public function iCallMyParent()
+    {
+        parent::iCallMyParent();
+        // Code here
+    }
+
+    /**
+     * short_description_here
+     * @access public
+     * @return 
+     */
+    public function iHaveArgs($customer)
+    {
+        // Code here
+    }
+
+    /**
+     * short_description_here
+     * @access public
+     * @return bool
+     */
+    public function iHaveArgsAndIReturnsBool($flag)
+    {
+        // Code here
+    }
+
+    /**
+     * short_description_here
+     * @access protected
+     * @return string
+     */
+    protected function _iHaveArgsIReturnsStringICallDad($order)
+    {
+        parent::_iHaveArgsIReturnsStringICallDad($order);
+        // Code here
+    }
+
+// Jacques Bodin-Hullin Tag NEW_METHOD
+
+}
+```
