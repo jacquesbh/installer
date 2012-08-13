@@ -790,7 +790,7 @@ HELP;
         // Module
         $routerName = strtolower($this->getModuleName()) . ($where == 'admin' ? '_adminhtml' : '');
         if (!$moduleRoute = $routers->{$routerName}) {
-            $moduleRoute = $routers->addChild(strtolower($this->getModuleName()));
+            $moduleRoute = $routers->addChild($routerName);
         }
 
         // Use
