@@ -174,7 +174,7 @@ HELP;
         $params = array_map('trim', explode(' ', $line));
 
         foreach ($params as $key => $param) {
-            if (empty($param)) {
+            if ($param === '') {
                 unset($params[$key]);
             }
         }
@@ -826,10 +826,10 @@ HELP;
             $name = array_shift($params);
         }
 
-        if (empty($params)) {
+        if (!count($params)) {
             do {
                 $value = $this->prompt("Value?");
-            } while (empty($value));
+            } while ($value === '');
         } else {
             $value = array_shift($params);
         }
