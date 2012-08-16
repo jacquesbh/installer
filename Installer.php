@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 /**
  * @license ALL RIGHTS RESERVED - Commercial use only with my approbation
