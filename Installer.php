@@ -117,6 +117,7 @@ class Installer
  | module               | mod                   | namespace name pool                       |
  | general              |                       |                                           |
  | info                 | i config conf         |                                           |
+ | clean                |                       | [all, cache, log(s)]                      |
  | controller           | c                     | name [actions]                            |
  | helper               | h                     | name [methods]                            |
  | model                | m                     | name [methods]                            |
@@ -198,6 +199,9 @@ HELP;
             case 'module':
             case 'mod':
                 $this->_processModule($params, true);
+                break;
+            case 'clean':
+                $this->_processClean($params);
                 break;
             case 'info':
             case 'i':
@@ -1933,6 +1937,60 @@ HELP;
         }
 
         $this->setLast();
+    }
+
+    protected function _processClean(array $params)
+    {
+        $cache  = false;
+        $logs   = false;
+
+        if (!count($params)) {
+            $params = array('all');
+        }
+
+        foreach ($params as $param) {
+            switch ($param) {
+            case 'log':
+            case 'logs':
+                $logs = true;
+                break;
+            case 'cache':
+                $cache = true;
+                break;
+            case 'all':
+            default:
+                $cache = true;
+                $logs = true;
+                break;
+            }
+        }
+
+        $varDir = PWD . '/var/';
+        if (is_dir($varDir)) {
+            if ($logs) {
+                $logDir = $varDir . 'log/';
+                if (is_dir($logDir)) {
+                    $files = glob("{$logDir}*.log");
+                    foreach ($files as $file) {
+                        $fp = fopen($file, 'w');
+                        ftruncate($fp, 0);
+                        fclose($fp);
+                    }
+                }
+                echo green() . "[OK] Logs\n";
+            }
+            if ($cache) {
+                $cacheDir = $varDir . 'cache/';
+                if (is_dir($cacheDir)) {
+                    $this->_rmdir($cacheDir);
+                }
+                $fpcDir = $varDir . 'full_page_cache/';
+                if (is_dir($fpcDir)) {
+                    $this->_rmdir($fpcDir);
+                }
+                echo green() . "[OK] Cache\n";
+            }
+        }
     }
 
     public function getLocales()

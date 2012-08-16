@@ -50,6 +50,7 @@ Type `?`!
      | module               | mod                   | namespace name pool                       |
      | general              |                       |                                           |
      | info                 | i config conf         |                                           |
+     | clean                |                       | [all, cache, log(s)]                      |
      | controller           | c                     | name [actions]                            |
      | helper               | h                     | name [methods]                            |
      | model                | m                     | name [methods]                            |
