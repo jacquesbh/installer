@@ -142,6 +142,11 @@ class Installer
 HELP;
     }
 
+    protected function _quit()
+    {
+        exit;
+    }
+
     protected function _init(array $params)
     {
         $this->_program = array_shift($params);
@@ -179,7 +184,7 @@ HELP;
         switch ($command) {
             case 'exit':
                 echo "\n";
-                exit;
+                $this->_quit();
                 break;
             case 'echo':
                 echo "\n" . white() . implode(' ', $params) . "\n";
