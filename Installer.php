@@ -75,7 +75,9 @@ class Installer
     protected $_lastMethod;
     protected $_lastParams;
 
-    public function __construct(array $argv)
+    protected $_cli = true;
+
+    public function __construct(array $argv, $useCmdLine = true)
     {
         // Welcome message
         echo green() . "The Installer - by jacquesbh\n";
@@ -94,6 +96,8 @@ class Installer
             echo red() . "Tidy is required ! http://tidy.sourceforge.net/\n";
             exit;
         }
+
+        $this->setCli($useCmdLine);
 
         $this->_init($argv);
         $this->_start();
@@ -163,11 +167,21 @@ HELP;
     }
 
     public function read()
+    public function setCli($flag)
     {
         $line = $this->_read();
         if (empty($line)) {
             echo white() . 'Try help?' . "\n";
             return;
+        $this->_cli = (bool) $flag;
+        return $this;
+    }
+
+    public function isCli()
+    {
+        return $this->_cli;
+    }
+
         }
 
         $params = array_map('trim', explode(' ', $line));
