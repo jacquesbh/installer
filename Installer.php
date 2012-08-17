@@ -2157,6 +2157,9 @@ HELP;
 
 }
 
+class Installer_Exception extends Exception
+{}
+
 $installer = new Installer($argv);
 
 __HALT_COMPILER();
