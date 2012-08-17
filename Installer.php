@@ -166,13 +166,8 @@ HELP;
         }
     }
 
-    public function read()
     public function setCli($flag)
     {
-        $line = $this->_read();
-        if (empty($line)) {
-            echo white() . 'Try help?' . "\n";
-            return;
         $this->_cli = (bool) $flag;
         return $this;
     }
@@ -182,8 +177,13 @@ HELP;
         return $this->_cli;
     }
 
+    public function read()
+    {
+        $line = $this->_read();
+        if (empty($line)) {
+            echo white() . 'Try help?' . "\n";
+            return;
         }
-
         $params = array_map('trim', explode(' ', $line));
 
         foreach ($params as $key => $param) {
