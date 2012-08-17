@@ -61,8 +61,6 @@ if (!function_exists('readline_add_history')) {
 class Installer
 {
 
-    //const VERSION = '1.3.5.2.2';
-
     protected $_templates;
 
     protected $_pool = 'local';
@@ -99,11 +97,6 @@ class Installer
 
         $this->_init($argv);
         $this->_start();
-    }
-
-    public function getVersion()
-    {
-        return self::VERSION;
     }
 
     public function help()
