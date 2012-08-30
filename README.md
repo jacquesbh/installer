@@ -76,6 +76,7 @@ Type `?`!
      | addtranslate         | __                    |                                           |
      | routers              | r route router        | where frontName                           |
      | tmp                  |                       | action                                    |
+     | misc                 | script                | name (without .php)                       |
      |                      |                       |                                           |
       ---------------------- ----------------------- -------------------------------------------
     > 
