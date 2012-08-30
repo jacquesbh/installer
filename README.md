@@ -77,6 +77,7 @@ Type `?`!
      | routers              | r route router        | where frontName                           |
      | tmp                  |                       | action                                    |
      | misc                 | script                | name (without .php)                       |
+     | doc                  |                       | [title]                                   |
      |                      |                       |                                           |
       ---------------------- ----------------------- -------------------------------------------
     > 
@@ -342,3 +343,14 @@ class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
 
 }
 ```
+
+## Documentation
+
+If you want generate a documentation for your modules, you can do it! And the Installer is helpful!
+
+    > doc Title if you want :)
+
+This command creates a simple directory named `doc` with a file `README.md`.
+
+The idea is to use _Easybook_ for generate the documentation in PDF or website formats.
+

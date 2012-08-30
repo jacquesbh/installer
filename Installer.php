@@ -141,6 +141,7 @@ class Installer
  | routers              | r route router        | where frontName                           |
  | tmp                  |                       | action                                    |
  | misc                 | script                | name (without .php)                       |
+ | doc                  |                       | [title]                                   |
  |                      |                       |                                           |
   ---------------------- ----------------------- -------------------------------------------
 
@@ -356,12 +357,33 @@ HELP;
             case 'script':
                 $this->_processMisc($params);
                 break;
+            case 'doc':
+                $this->_processDocumentation($params);
+                break;
             default:
                 echo white() . 'Try help?' . "\n";
                 break;
         }
 
         usleep(100000);
+    }
+
+    protected function _processDocumentation(array $params)
+    {
+        // Title?
+        if (!empty($params)) {
+            $title = implode(' ', $params);
+        } else {
+            $title = $this->getModuleTitle();
+        }
+
+        $dir = $this->getModuleDir('doc');
+
+        if (!is_file($filename = $dir . '/README.md')) {
+            file_put_contents($filename, $this->getTemplate('doc_readme', array(
+                'title' => $title
+            )));
+        }
     }
 
     protected function _processMisc(array $params)
@@ -2176,6 +2198,14 @@ HELP;
         return $dir;
     }
 
+    public function getModuleTitle()
+    {
+        if (!$this->_namespace) {
+            return null;
+        }
+        return sprintf('%s %s', $this->_namespace, $this->_module);
+    }
+
     public function getModuleName()
     {
         if (!$this->_namespace) {
@@ -2635,3 +2665,11 @@ Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
 
 // code here
 END misc
+
+BEGIN doc_readme
+# title
+
+Enter the module description here ;).
+
+END doc_readme
+
