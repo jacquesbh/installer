@@ -140,6 +140,7 @@ class Installer
  | addtranslate         | __                    |                                           |
  | routers              | r route router        | where frontName                           |
  | tmp                  |                       | action                                    |
+ | misc                 | script                | name (without .php)                       |
  |                      |                       |                                           |
   ---------------------- ----------------------- -------------------------------------------
 
@@ -351,12 +352,41 @@ HELP;
             case 'tmp':
                 $this->_processTmp($params);
                 break;
+            case 'misc':
+            case 'script':
+                $this->_processMisc($params);
+                break;
             default:
                 echo white() . 'Try help?' . "\n";
                 break;
         }
 
         usleep(100000);
+    }
+
+    protected function _processMisc(array $params)
+    {
+        if (empty($params)) {
+            do {
+                $name = $this->prompt('Which name?');
+            } while (empty($name));
+        } else {
+            $name = array_shift($params);
+        }
+
+        $name = str_replace(' ', '_', strtolower($name));
+
+        $dir = $this->getMiscDir();
+        if (!is_dir($dir)) {
+            mkdir($dir);
+        }
+
+        $filename = $dir . '/' . $name . '.php';
+
+        if (!is_file($filename)) {
+            file_put_contents($filename, $this->getTemplate('misc'));
+        }
+
     }
 
     protected function _processTmp(array $params)
@@ -1003,7 +1033,7 @@ HELP;
         if (empty($params)) {
             do {
                 $line = $this->prompt('Minutes?');
-            } while (empty($line));
+            } while ($line !== '');
         } else {
             $line = array_shift($params);
         }
@@ -1013,7 +1043,7 @@ HELP;
         if (empty($params)) {
             do {
                 $line = $this->prompt('Hours?');
-            } while (empty($line));
+            } while ($line !== '');
         } else {
             $line = array_shift($params);
         }
@@ -1023,7 +1053,7 @@ HELP;
         if (empty($params)) {
             do {
                 $line = $this->prompt('Days? (0-31)');
-            } while (empty($line));
+            } while ($line !== '');
         } else {
             $line = array_shift($params);
         }
@@ -1033,7 +1063,7 @@ HELP;
         if (empty($params)) {
             do {
                 $line = $this->prompt('Month?');
-            } while (empty($line));
+            } while ($line !== '');
         } else {
             $line = array_shift($params);
         }
@@ -1043,7 +1073,7 @@ HELP;
         if (empty($params)) {
             do {
                 $line = $this->prompt('Days of week?');
-            } while (empty($line));
+            } while ($line !== '');
         } else {
             $line = array_shift($params);
         }
@@ -2084,6 +2114,11 @@ HELP;
         return str_replace(array_keys($vars), array_values($vars), $template);
     }
 
+    public function getMiscDir()
+    {
+        return PWD . '/misc/';
+    }
+
     public function getAppDir()
     {
         return PWD . '/app/';
@@ -2584,3 +2619,19 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Grid
 
 }
 END grid_block
+
+BEGIN misc
+<_?php
+{COPYRIGHT}
+
+// Mage !
+require_once __DIR__ . '/../app/Mage.php';
+
+// Init Magento
+Mage::app('admin');
+
+// Init store (needed for save products, for example)
+Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
+
+// code here
+END misc
