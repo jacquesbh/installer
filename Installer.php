@@ -2346,13 +2346,19 @@ BEGIN setup_class
 <_?php
 {COPYRIGHT}
 
-/* @var $installer Mage_Core_Model_Resource_Setup */
-$installer = $this;
-$installer->startSetup();
+try {
+
+    /* @var $installer Mage_Core_Model_Resource_Setup */
+    $installer = $this;
+    $installer->startSetup();
 
 
 
-$installer->endSetup();
+    $installer->endSetup();
+
+} catch (Exception $e) {
+    // Silence is golden
+}
 
 END setup_class
 
