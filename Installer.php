@@ -1443,11 +1443,12 @@ HELP;
 
         if (!isset($config->{$where}->layout)) {
             $file = strtolower($this->getModuleName()) . '.xml';
-            $config->{$where}
+            $child = $config->{$where}
                 ->addChild('layout')
                 ->addChild('updates')
-                ->addChild(strtolower($this->getModuleName()))
-                ->addChild('file', $file);
+                ->addChild(strtolower($this->getModuleName()));
+            $child->addAttribute('module', $this->getModuleName());
+            $child->addChild('file', $file);
             $this->writeConfig();
             $dir = $this->getAppDir() . 'design/' . $where . '/';
 
