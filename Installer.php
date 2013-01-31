@@ -1055,7 +1055,7 @@ HELP;
         if (empty($params)) {
             do {
                 $line = $this->prompt('Minutes?');
-            } while ($line !== '');
+            } while ($line === '');
         } else {
             $line = array_shift($params);
         }
@@ -1065,7 +1065,7 @@ HELP;
         if (empty($params)) {
             do {
                 $line = $this->prompt('Hours?');
-            } while ($line !== '');
+            } while ($line === '');
         } else {
             $line = array_shift($params);
         }
@@ -1075,7 +1075,7 @@ HELP;
         if (empty($params)) {
             do {
                 $line = $this->prompt('Days? (0-31)');
-            } while ($line !== '');
+            } while ($line === '');
         } else {
             $line = array_shift($params);
         }
@@ -1085,7 +1085,7 @@ HELP;
         if (empty($params)) {
             do {
                 $line = $this->prompt('Month?');
-            } while ($line !== '');
+            } while ($line === '');
         } else {
             $line = array_shift($params);
         }
@@ -1095,7 +1095,7 @@ HELP;
         if (empty($params)) {
             do {
                 $line = $this->prompt('Days of week?');
-            } while ($line !== '');
+            } while ($line === '');
         } else {
             $line = array_shift($params);
         }
