@@ -141,6 +141,7 @@ class Installer
  | doc                  |                       | [title]                                   |
  | system               |                       |                                           |
  | adminhtml            |                       |                                           |
+ | session              |                       | [methods]                                 |
  |                      |                       |                                           |
   ---------------------- ----------------------- -------------------------------------------
 
@@ -366,6 +367,12 @@ HELP;
             case 'system':
                 $this->_processModule();
                 $this->_processSystem($params);
+                break;
+            case 'session':
+                $this->_processModule();
+                array_unshift($params, '_construct:this/p'); // method
+                array_unshift($params, 'session'); // class
+                $this->_processModel($params);
                 break;
             default:
                 echo white() . 'Try help?' . "\n";
@@ -1704,7 +1711,10 @@ HELP;
 
         $filename = $dir . $name . '.php';
         if (!is_file($filename)) {
-            file_put_contents($filename, $this->getTemplate('model_class', array('{Name}' => implode('_', $names) . (empty($names) ? '' : '_') . $name)));
+            file_put_contents($filename, $this->getTemplate('model_class', array(
+                '{Name}' => implode('_', $names) . (empty($names) ? '' : '_') . $name,
+                'Mage_Core_Model_Abstract' => ($name == 'Session' ? 'Mage_Core_Model_Session_Abstract' : 'Mage_Core_Model_Abstract')
+            )));
         }
 
         if (empty($params)) {
