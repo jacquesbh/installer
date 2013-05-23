@@ -1414,7 +1414,7 @@ HELP;
     {
         list($dir, $created) = $this->getModuleDir('sql', true);
 
-        $config = $this->getconfig();
+        $config = $this->getConfig();
         if (!isset($config->global)) {
             $config->addChild('global');
         }
@@ -1880,6 +1880,12 @@ HELP;
         $this->setLast(__FUNCTION__, $officialName);
     }
 
+    protected function _getClassName($content)
+    {
+        $reg = '`^.+class ([a-zA-Z_]*) .+$`isU';
+        return preg_replace($reg, '\1', $content);
+    }
+
     public function replaceVarsAndMethods(&$content, $params, $type = false)
     {
         while (!empty($params)) {
@@ -1895,7 +1901,7 @@ HELP;
                     }
                     $const = $this->getTemplate('const_var', array(
                         '{name}' => $name,
-                        '{type}' => $type,
+                        '{type}' => ($type == 'this' ? '{this}' : $type),
                         '{value}' => $value,
                         'short_description_here' => $shortDesc
                     )) . "\n\n" . $this->getTag('new_const');
@@ -1906,13 +1912,13 @@ HELP;
                     if (strpos($name, '_') === 0) {
                         $var = $this->getTemplate('protected_var', array(
                             '{name}' => $name,
-                            '{type}' => $type,
+                            '{type}' => ($type == 'this' ? '{this}' : $type),
                             '{value}' => $value
                         )) . "\n\n" . $this->getTag('new_var');
                     } else {
                         $var = $this->getTemplate('public_var', array(
                             '{name}' => $name,
-                            '{type}' => $type,
+                            '{type}' => ($type == 'this' ? '{this}' : $type),
                             '{value}' => $value
                         )) . "\n\n" . $this->getTag('new_var');
                     }
@@ -1931,23 +1937,38 @@ HELP;
                         }
                     }
                     $useParent = isset($match[5]) && $match[5] === 'p';
+                    $description = 'short_description_here';
                     if ($name == '_construct' && $match[1] == '_') {
                         $method = $this->getTemplate('constructor_method', array(
                             '{params}' => $vars,
+                            'short_description_here' => $description,
+                            'return' => '{this}',
                             '// Code here' => (!$useParent ? '' : "parent::$name($vars);\n        ") . '// Code here'
                         )) . "\n\n" . $this->getTag('new_method');
                     } elseif ($match[1] == '_') {
+                        switch ($name) {
+                            case 'construct':
+                                $description = 'Secondary constructor';
+                                break;
+                            case 'prepareLayout':
+                                $description = 'Prepare layout';
+                                $return = 'this';
+                                $useParent = true;
+                                break;
+                        }
                         $method = $this->getTemplate('protected_method', array(
                             '{name}' => $name,
                             '{params}' => $vars,
-                            '{return}' => $return,
+                            '{return}' => ($return == 'this' ? '{this}' : $return),
+                            'short_description_here' => $description,
                             '// Code here' => (!$useParent ? '' : "parent::_$name($vars);\n        ") . '// Code here'
                         )) . "\n\n" . $this->getTag('new_method');
                     } else {
                         $method = $this->getTemplate('public_method', array(
                             '{name}' => $name . ($type == 'action' ? 'Action' : ''),
                             '{params}' => ($type == 'observer' && !$vars) ? 'Varien_Event_Observer $observer' : $vars,
-                            '{return}' => $return,
+                            '{return}' => ($return == 'this' ? '{this}' : $return),
+                            'short_description_here' => $description,
                             '// Code here' => (!$useParent ? '' : "parent::$name($vars);\n        ") . '// Code here'
                         )) . "\n\n" . $this->getTag('new_method');
                     }
@@ -1956,6 +1977,12 @@ HELP;
                     echo "Bad syntax for " . red() . $name . white() . ".\n";
                 }
             }
+        }
+
+        if (strpos($content, '{this}') !== false) {
+            $tmpContent = &$content;
+            $className = $this->_getClassName($tmpContent);
+            $content = str_replace('{this}', $className, $content);
         }
     }
 
