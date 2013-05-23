@@ -5,7 +5,7 @@
  *
  * @author Jacques Bodin-Hullin <jacques@bodin-hullin.net>
  * @package Installer
- * @copyright Copyright (c) 2011-2012 Jacques Bodin-Hullin (http://jacques.sh)
+ * @copyright Copyright (c) 2011-2013 Jacques Bodin-Hullin (http://jacques.sh)
  */
 
 declare( ticks = 1 );
