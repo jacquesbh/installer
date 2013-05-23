@@ -10,7 +10,6 @@
 
 declare( ticks = 1 );
 
-// TODO system.xml
 // TODO adminhtml.xml
 
 ini_set('date.timezone', 'Europe/Paris');
@@ -142,6 +141,7 @@ class Installer
  | tmp                  |                       | action                                    |
  | misc                 | script                | name (without .php)                       |
  | doc                  |                       | [title]                                   |
+ | system               |                       |                                           |
  |                      |                       |                                           |
   ---------------------- ----------------------- -------------------------------------------
 
@@ -360,12 +360,29 @@ HELP;
             case 'doc':
                 $this->_processDocumentation($params);
                 break;
+            case 'system':
+                $this->_processModule();
+                $this->_processSystem($params);
+                break;
             default:
                 echo white() . 'Try help?' . "\n";
                 break;
         }
 
         usleep(100000);
+    }
+
+    protected function _processSystem(array $params)
+    {
+        $this->_processHelper(array('data', '-'));
+
+        $dir = $this->getModuleDir('etc');
+
+        if (!is_file($filename = $dir . '/system.xml')) {
+            file_put_contents($filename, $this->getTemplate('system_xml', array(
+                '{module}' => strtolower($this->getModuleName())
+            )));
+        }
     }
 
     protected function _processDocumentation(array $params)
@@ -2277,6 +2294,59 @@ BEGIN module_xml
     </modules>
 </config>
 END module_xml
+
+BEGIN system_xml
+<_?xml version="1.0" encoding="utf-8" ?>
+<!--
+{COPYRIGHT}
+-->
+<config>
+    <tabs>
+        <{module} translate="label" module="{module}">
+            <label>Label</label>
+            <sort_order>100</sort_order>
+        </{module}>
+    </tabs>
+    <sections>
+        <section_name translate="label" module="{module}">
+            <label>Label Section</label>
+            <tab>{module}</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>100</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <group_name translate="label" module="{module}">
+                    <label>Label Group</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <field_name translate="label" module="{module}">
+                            <label>Label</label>
+                            <frontend_type>text</frontend_type>
+                            <!--
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            -->
+                            <!--<backend_model>adminhtml/system_config_backend_encrypted</backend_model>-->
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[Comment]]></comment>
+                        </field_name>
+                    </fields>
+                </group_name>
+            </groups>
+        </section_name>
+    </sections>
+</config>
+END system_xml
 
 BEGIN config_xml
 <_?xml version="1.0" encoding="utf-8" ?>
