@@ -10,8 +10,6 @@
 
 declare( ticks = 1 );
 
-// TODO adminhtml.xml
-
 ini_set('date.timezone', 'Europe/Paris');
 
 defined('PWD')                  || define('PWD', getenv('PWD'));
@@ -142,6 +140,7 @@ class Installer
  | misc                 | script                | name (without .php)                       |
  | doc                  |                       | [title]                                   |
  | system               |                       |                                           |
+ | adminhtml            |                       |                                           |
  |                      |                       |                                           |
   ---------------------- ----------------------- -------------------------------------------
 
@@ -360,6 +359,10 @@ HELP;
             case 'doc':
                 $this->_processDocumentation($params);
                 break;
+            case 'adminhtml':
+                $this->_processModule();
+                $this->_processAdminhtml($params);
+                break;
             case 'system':
                 $this->_processModule();
                 $this->_processSystem($params);
@@ -370,6 +373,19 @@ HELP;
         }
 
         usleep(100000);
+    }
+
+    protected function _processAdminhtml(array $params)
+    {
+        $this->_processHelper(array('data', '-'));
+
+        $dir = $this->getModuleDir('etc');
+
+        if (!is_file($filename = $dir . '/adminhtml.xml')) {
+            file_put_contents($filename, $this->getTemplate('adminhtml_xml', array(
+                '{module}' => strtolower($this->getModuleName())
+            )));
+        }
     }
 
     protected function _processSystem(array $params)
@@ -2584,6 +2600,67 @@ class {Module_Name}_Model_Mysql4_{Name}_Collection extends Mage_Core_Model_Mysql
 
 }
 END mysql4_collection_class
+
+BEGIN adminhtml_xml
+<_?xml version="1.0" encoding="utf-8" ?>
+<!--
+{COPYRIGHT}
+-->
+<config>
+    <menu>
+        <main_menu_item translate="title" module="{module}" >
+            <title>Main Menu Item</title>
+            <sort_order>10</sort_order>
+            <children>
+                <sub_menu_item translate="title" module="{module}">
+                    <title>Sub Menu Item</title>
+                    <sort_order>10</sort_order>
+                    <children>
+                        <sub_menu_link translate="title" module="{module}">
+                            <title>Sub menu link</title>
+                            <action>adminhtml/...</action>
+                        </sub_menu_link>
+                    </children>
+                </sub_menu_item>
+            </children>
+        </main_menu_item>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <!--
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <{module} translate="title" module="{module}">
+                                        <title>Module Section</title>
+                                    </{module}>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                    -->
+                    <main_menu_item translate="title" module="{module}">
+                        <title>Main Menu Item</title>
+                        <children>
+                            <sub_menu_item translate="title" module="{module}">
+                                <title>Sub Menu Item</title>
+                                <children>
+                                    <sub_menu_link translate="title" module="{module}">
+                                        <title>Sub menu link</title>
+                                    </sub_menu_link>
+                                </children>
+                            </sub_menu_item>
+                        </children>
+                    </main_menu_item>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>
+END adminhtml_xml
 
 BEGIN layout_xml
 <_?xml version="1.0" encoding="utf-8" ?>
