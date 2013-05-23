@@ -1400,9 +1400,19 @@ HELP;
         }
         echo 'Mysql4 Upgrade From ' . red() . $from . white() . ' to ' . red() . $to . white() . ".\n";
 
+        $setupClass = (string) $config
+            ->global
+            ->resources
+            ->{strtolower($this->getModuleName()) . '_setup'}
+            ->setup
+            ->class
+        ;
+
         $filename = $dir . 'mysql4-upgrade-' . $from . '-' . $to . '.php';
         if (!is_file($filename)) {
-            file_put_contents($filename, $this->getTemplate('setup_class'));
+            file_put_contents($filename, $this->getTemplate('setup_class', array(
+                'Mage_Core_Model_Resource_Setup' => $setupClass
+            )));
         }
 
         $this->_processReloadConfig();
@@ -1439,9 +1449,19 @@ HELP;
             mkdir($dir);
         }
 
+        $setupClass = (string) $config
+            ->global
+            ->resources
+            ->{strtolower($this->getModuleName()) . '_setup'}
+            ->setup
+            ->class
+        ;
+
         $filename = $dir . 'mysql4-install-' . $this->getConfigVersion() . '.php';
         if (!is_file($filename)) {
-            file_put_contents($filename, $this->getTemplate('setup_class'));
+            file_put_contents($filename, $this->getTemplate('setup_class', array(
+                'Mage_Core_Model_Resource_Setup' => $setupClass
+            )));
         }
 
         $this->_processReloadConfig();
