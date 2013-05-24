@@ -533,6 +533,23 @@ HELP;
                 '{Collection_Model}' => $this->getModuleName() . '_Model_Mysql4_' . implode('_', $entityTab) . '_Collection'
              )));
         }
+
+        // Methods
+        $methods = $this->getTemplate('grid_controller_methods', array(
+            '{Entity}' => end($names),
+            '{entity}' => strtolower(end($names)),
+            '{name}' => strtolower(implode('_', $names)),
+            '{grid_name}' => strtolower(implode('_', $names) . '_Grid'),
+        ));
+
+        // Grid controller..
+        $this->_processController(array('adminhtml_' . $entity, '-'), compact('methods'));
+
+        // Helper data
+        $this->_processHelper(array('data', '-'));
+
+        // Router
+        $this->_processRouter(array('admin'));
     }
 
     protected function _processGeneral(array $params)
@@ -877,7 +894,7 @@ HELP;
 
         if (empty($params)) {
             do {
-                $frontName = $this->prompt('Front name ?');
+                $frontName = $this->prompt('Front name?');
             } while (empty($frontName));
         } else {
             $frontName = array_shift($params);
@@ -1728,7 +1745,7 @@ HELP;
         $this->setLast(__FUNCTION__, $officialName);
     }
 
-    protected function _processController(array $params)
+    protected function _processController(array $params, array $data = array())
     {
         if (empty($params)) {
             do {
@@ -1767,8 +1784,24 @@ HELP;
             $params = explode(' ', $this->prompt('Action?'));
         }
 
+        // Vars & Methods
         $content = file_get_contents($filename);
         $this->replaceVarsAndMethods($content, $params, 'action');
+
+        // Other data
+        if (isset($data['consts'])) {
+            $tag = $this->getTag('new_const');
+            $content = str_replace($tag, $data['consts'] . "\n$tag", $content);
+        }
+        if (isset($data['vars'])) {
+            $tag = $this->getTag('new_var');
+            $content = str_replace($tag, $data['vars'] . "\n$tag", $content);
+        }
+        if (isset($data['methods'])) {
+            $tag = $this->getTag('new_method');
+            $content = str_replace($tag, $data['methods'] . "\n$tag", $content);
+        }
+
         file_put_contents($filename, $content);
 
         $this->setLast(__FUNCTION__, $officialName);
@@ -2209,6 +2242,7 @@ HELP;
             '<_?php' => '<?php',
             '<_?xml' => '<?xml',
             '{Module_Name}' => $this->getModuleName(),
+            '{module_name}' => strtolower($this->getModuleName()),
             '{LICENSE}' => LICENSE,
             '{USER_NAME}' => utf8_encode(USER_NAME),
             '{USER_EMAIL}' => USER_EMAIL,
@@ -2877,4 +2911,87 @@ BEGIN doc_readme
 Enter the module description here ;).
 
 END doc_readme
+
+BEGIN grid_controller_methods
+    /**
+     * Prepare layout
+     * @access protected
+     * @return void
+     */
+    protected function _prepareLayout()
+    {
+        // Title
+        // $this->_title($this->__('Manage {Entity}'));
+
+        return parent::_prepareLayout();
+    }
+
+    /**
+     * List
+     * @access void
+     * @return void
+     */
+    public function indexAction()
+    {
+        $this->_forward('grid');
+    }
+
+    /**
+     * Grid
+     * @access public
+     * @return void
+     */
+    public function gridAction()
+    {
+        // Layout
+        $this->loadLayout();
+
+        // Title
+        $this->_titles($this->__('Grid'));
+
+        // Content
+        $grid = $this->getLayout()->createBlock('{module_name}/{name}', 'grid');
+        $this->_addContent($grid);
+
+        // Render
+        $this->renderLayout();
+    }
+
+END grid_controller_methods
+
+BEGIN tmp
+
+    /**
+     * Delete {entity}
+     * @access public
+     * @return void
+     */
+    public function deleteAction()
+    {
+        // Object
+        $id     = $this->getRequest()->getParam('id', false);
+        $object = Mage::getModel('{module_name}/{name}')->load($id);
+
+        // No object?
+        if (!$object->getId()) {
+            $this->_getSession()->addError($this->__('{Entity} not found.'));
+            $this->_redirectReferer();
+            return;
+        }
+
+        // Delete it
+        try {
+            $object->delete();
+        } catch (Mage_Core_Exception $e) {
+            $this->_getSession()->addError($this->__('An error occurred.'));
+            $this->_redirectReferer();
+            return;
+        }
+
+        // Success
+        $this->_getSession()->addSuccess($this->__('{Entity} deleted successfully.'));
+        $this->_redirect('*/*/index');
+    }
+
+END tmp
 
