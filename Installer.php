@@ -489,7 +489,7 @@ HELP;
         unset($config);
 
         // Create directories :)
-        $names = array_map('ucfirst', explode('_', $entity));
+        $names = $entityTab = array_map('ucfirst', explode('_', $entity));
         array_unshift($names, 'Adminhtml');
 
         list($dir, $created) = $this->getModuleDir('Block', true);
@@ -511,12 +511,12 @@ HELP;
         }
 
         // Create container
-        $filename = $dir . '../' . ucfirst($entity) . '.php';
+        $filename = $dir . '../' . end($names) . '.php';
 
         if (!is_file($filename)) {
             file_put_contents($filename, $this->getTemplate('grid_container_block', array(
-                '{Entity}' => ucfirst($entity),
-                '{Name}' => 'Adminhtml_' . ucfirst($entity),
+                '{Entity}' => end($names),
+                '{Name}' => implode('_', $names),
                 '{blockGroup}' => strtolower($this->getModuleName()),
                 '{controller}' => 'adminhtml_' . strtolower($entity)
             )));
@@ -527,10 +527,10 @@ HELP;
 
         if (!is_file($filename)) {
             file_put_contents($filename, $this->getTemplate('grid_block', array(
-                '{Entity}' => ucfirst($entity),
-                '{Name}' => 'Adminhtml_' . ucfirst($entity) . '_Grid',
+                '{Entity}' => end($names),
+                '{Name}' => implode('_', $names) . '_Grid',
                 '{resource_model_collection}' => strtolower($this->getModuleName()) . '/' . strtolower($entity) . '_collection',
-                '{Collection_Model}' => $this->getModuleName() . '_Model_Mysql4_' . ucfirst($entity) . '_Collection'
+                '{Collection_Model}' => $this->getModuleName() . '_Model_Mysql4_' . implode('_', $entityTab) . '_Collection'
              )));
         }
     }
