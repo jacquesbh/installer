@@ -78,6 +78,9 @@ Type `?`!
      | tmp                  |                       | action                                    |
      | misc                 | script                | name (without .php)                       |
      | doc                  |                       | [title]                                   |
+     | system               |                       |                                           |
+     | adminhtml            |                       |                                           |
+     | session              |                       | [methods]                                 |
      |                      |                       |                                           |
       ---------------------- ----------------------- -------------------------------------------
     > 
@@ -97,6 +100,7 @@ Type `?`!
     Jbh_Demo> layout
     Where? (enter for front)
     > 
+    Jbh_Demo> session
     Jbh_Demo>
 
 Easy, isn't it ?
@@ -353,4 +357,9 @@ If you want generate a documentation for your modules, you can do it! And the In
 This command creates a simple directory named `doc` with a file `README.md`.
 
 The idea is to use _Easybook_ for generate the documentation in PDF or website formats.
+
+## system.xml & adminhtml.xml
+
+You can generate those files but you need to edit them after.
+It's customized samples.
 
