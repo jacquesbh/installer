@@ -125,6 +125,9 @@ class Installer
  | resources            | res                   |                                           |
  | entity               | ent                   | name table                                |
  | grid                 |                       | entity                                    |
+ |----------------------|-----------------------|-------------------------------------------|
+ | COMMAND              | ALIAS                 | PARAMETERS                                |
+ |----------------------|-----------------------|-------------------------------------------|
  | setup                | sql set               |                                           |
  | upgrade              | up                    | [from] to                                 |
  | event                |                       | name model method where                   |
