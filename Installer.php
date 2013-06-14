@@ -2955,7 +2955,7 @@ BEGIN grid_controller_methods
         $this->loadLayout();
 
         // Title
-        $this->_titles($this->__('Grid'));
+        $this->_title($this->__('Grid'));
 
         // Content
         $grid = $this->getLayout()->createBlock('{module_name}/{name}', 'grid');
