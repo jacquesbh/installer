@@ -2021,6 +2021,11 @@ HELP;
                                 $return = 'this';
                                 $useParent = true;
                                 break;
+                            case 'toHtml':
+                                $description = 'To HTML';
+                                $return = 'string';
+                                $useParent = true;
+                                break;
                         }
                         $method = $this->getTemplate('protected_method', array(
                             '{name}' => $name,
