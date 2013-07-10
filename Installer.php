@@ -2922,16 +2922,16 @@ END doc_readme
 
 BEGIN grid_controller_methods
     /**
-     * Prepare layout
-     * @access protected
+     * Pre dispatch
+     * @access public
      * @return void
      */
-    protected function _prepareLayout()
+    public function preDispatch()
     {
         // Title
         // $this->_title($this->__('Manage {Entity}'));
 
-        return parent::_prepareLayout();
+        return parent::preDispatch();
     }
 
     /**
