@@ -1467,6 +1467,8 @@ HELP;
             $setup = $moduleSetup->addChild('setup');
             $setup->addChild('module', $this->getModuleName());
             $setup->addChild('class', 'Mage_Core_Model_Resource_Setup');
+            $connection = $moduleSetup->addChild('connection');
+            $connection->addChild('use', 'core_setup');
             $this->writeConfig();
         }
 
