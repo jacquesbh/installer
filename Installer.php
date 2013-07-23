@@ -84,7 +84,7 @@ class Installer
 
         // Execution path
         if (!is_dir($this->getAppDir())) {
-            echo red() . "Bad execution path.\n";
+            echo red() . "Bad execution path.\n" . white();
             exit;
         }
 
