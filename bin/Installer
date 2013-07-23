@@ -1,4 +1,9 @@
 #!/bin/bash
 
-DIR=$(cd `dirname $0` && pwd)
+if [[ -L $0 ]]; then
+    DIR=$(cd $(dirname `readlink $0`) && pwd)
+else
+    DIR=$(cd `dirname $0` && pwd)
+fi
+
 php -f $DIR/../Installer.php $@
