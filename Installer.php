@@ -2376,9 +2376,9 @@ HELP;
             $searchAndReplace['{COPYRIGHT}'] = $this->getTemplate('copyright');
         }
 
-        $template = str_replace(array_keys($searchAndReplace), array_values($searchAndReplace), $template);
+        $template = strtr($template, $searchAndReplace);
 
-        return str_replace(array_keys($vars), array_values($vars), $template);
+        return strtr($template, $vars);
     }
 
     public function getMiscDir()
@@ -2943,7 +2943,7 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Grid_Contai
 
         $this->_blockGroup = '{blockGroup}';
         $this->_controller = '{controller}';
-        $this->_headerText = $this->__('');
+        $this->_headerText = $this->__('Grid of {Entity}');
 
         return $this;
     }
@@ -3179,7 +3179,7 @@ BEGIN grid_controller_methods
     public function preDispatch()
     {
         // Title
-        // $this->_title($this->__('Manage {Entity}'));
+        $this->_title($this->__('Manage {Entity}'));
 
         return parent::preDispatch();
     }
