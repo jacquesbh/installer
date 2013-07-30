@@ -125,6 +125,7 @@ class Installer
  | resources            | res                   |                                           |
  | entity               | ent                   | name table                                |
  | grid                 |                       | entity                                    |
+ | form                 |                       | entity                                    |
  |----------------------|-----------------------|-------------------------------------------|
  | COMMAND              | ALIAS                 | PARAMETERS                                |
  |----------------------|-----------------------|-------------------------------------------|
@@ -353,6 +354,10 @@ HELP;
                 $this->_processModule();
                 $this->_processGrid($params);
                 break;
+            case 'form':
+                $this->_processModule();
+                $this->_processForm($params);
+                break;
             case 'tmp':
                 $this->_processTmp($params);
                 break;
@@ -543,6 +548,102 @@ HELP;
             '{entity}' => strtolower(end($names)),
             '{name}' => strtolower(implode('_', $names)),
             '{grid_name}' => strtolower(implode('_', $names) . '_Grid'),
+        ));
+
+        // Grid controller..
+        $this->_processController(array('adminhtml_' . $entity, '-'), compact('methods'));
+
+        // Helper data
+        $this->_processHelper(array('data', '-'));
+
+        // Router
+        $this->_processRouter(array('admin'));
+    }
+
+    protected function _processForm(array $params)
+    {
+        // Check entity
+        if (empty($params)) {
+            do {
+                $entity = $this->prompt('Which entity?');
+            } while (empty($entity));
+        } else {
+            $entity = array_shift($params);
+        }
+
+        // Check entity exists
+        $this->_processResources(array());
+
+        $config = $this->getConfig();
+        if (!isset($config->global)) {
+            $config->addChild('global');
+        }
+        $resourceModel = $config->global->models->{strtolower($this->getModuleName())}->resourceModel;
+        $entities = $config->global->models->{$resourceModel}->entities;
+        if (!$entities->{strtolower($entity)}) {
+            $this->_processEntity(array($entity));
+        }
+        unset($config);
+
+        // Create directories :)
+        $names = $entityTab = array_map('ucfirst', explode('_', $entity));
+        array_unshift($names, 'Adminhtml');
+        array_push($names, 'Edit');
+
+        list($dir, $created) = $this->getModuleDir('Block', true);
+
+        if ($created) {
+            $config = $this->getConfig();
+            $global = $config->global;
+            if (!isset($global['blocks'])) {
+                $global->addChild('blocks')->addChild(strtolower($this->getModuleName()))->addChild('class', $this->getModuleName() . '_Block');
+            }
+            $this->writeConfig();
+        }
+
+        foreach ($names as $rep) {
+            $dir .= $rep . '/';
+            if (!is_dir($dir)) {
+                mkdir($dir);
+            }
+        }
+
+        // Create container
+        $filename = $dir . '../' . end($names) . '.php';
+
+        if (!is_file($filename)) {
+            file_put_contents($filename, $this->getTemplate('form_container_block', array(
+                '{Entity}' => end($entityTab),
+                '{entity}' => strtolower(end($entityTab)),
+                '{current}' => strtolower(end($entityTab)),
+                '{Name}' => implode('_', $names),
+                '{blockGroup}' => strtolower($this->getModuleName()),
+                '{controller}' => 'adminhtml_' . strtolower($entity),
+                '{entity_mage_identifier}' => strtolower($this->getModuleName() . '/' . implode('_', $entityTab)),
+                '{Entity_Name}' => $this->getModuleName() . '_Model_' . implode('_', $entityTab),
+            )));
+        }
+
+        // Create form
+        $filename = $dir . '/Form.php';
+
+        if (!is_file($filename)) {
+            file_put_contents($filename, $this->getTemplate('form_block', array(
+                '{Entity}' => end($entityTab),
+                '{Name}' => implode('_', $names) . '_Form',
+                '{current}' => strtolower(end($entityTab)),
+                '{id_field}' => strtolower(end($entityTab)) . '_id',
+                '{Entity_Name}' => $this->getModuleName() . '_Model_' . implode('_', $entityTab),
+             )));
+        }
+
+        // Methods
+        $methods = $this->getTemplate('form_controller_methods', array(
+            '{Entity}' => end($entityTab),
+            '{entity}' => strtolower(end($entityTab)),
+            '{current}' => strtolower(end($entityTab)),
+            '{form_name}' => strtolower(implode('_', $names)),
+            '{entity_mage_identifier}' => strtolower($this->getModuleName() . '/' . implode('_', $entityTab)),
         ));
 
         // Grid controller..
@@ -2908,6 +3009,144 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Grid
 }
 END grid_block
 
+BEGIN form_container_block
+<_?php
+{COPYRIGHT}
+
+/**
+ * {Entity} Form Container
+ * @package {Module_Name}
+ */
+class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Form_Container
+{
+
+// {COMPANY_NAME} Tag NEW_CONST
+
+// {COMPANY_NAME} Tag NEW_VAR
+
+    /**
+     * Constructor Override
+     * @access protected
+     * @return {Module_Name}_Block_{Name}
+     */
+    protected function _construct()
+    {
+        parent::_construct();
+
+        $this->_blockGroup = '{blockGroup}';
+        $this->_controller = '{controller}';
+        $this->_mode       = 'edit';
+
+        $this->setFormActionUrl($this->getUrl('*/*/save'));
+
+        return $this;
+    }
+
+    /**
+     * The header
+     * @access public
+     * @return string
+     */
+    public function getHeaderText()
+    {
+        if ($this->_getObject()->getId()) {
+            $header = 'New {Entity}';
+        } else {
+            $header = 'Edit {Entity}';
+        }
+        return $this->__($header);
+    }
+
+    /**
+     * Retrieve the {entity}
+     * @access protected
+     * @return {Entity_Name}
+     */
+    protected function _getObject()
+    {
+        return Mage::registry('current_{current}');
+    }
+
+// {COMPANY_NAME} Tag NEW_METHOD
+
+}
+END form_container_block
+
+BEGIN form_block
+<_?php
+{COPYRIGHT}
+
+/**
+ * {Entity} Form
+ * @package {Module_Name}
+ */
+class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Form
+{
+
+// {COMPANY_NAME} Tag NEW_CONST
+
+// {COMPANY_NAME} Tag NEW_VAR
+
+    /**
+     * Prepare form before rendering HTML
+     *
+     * @return Mage_Adminhtml_Block_Widget_Form
+     */
+    protected function _prepareForm()
+    {
+        $form = new Varien_Data_Form(array(
+            'id'        => 'edit_form',
+            'action'    => $this->getData('action'),
+            'method'    => 'post',
+            'enctype'   => 'multipart/form-data'
+        ));
+
+        $entity = Mage::registry('current_{current}');
+        $form->setDataObject($entity);
+
+        if ($entity->getId()) {
+            $form->addField('{id_field}', 'hidden', array(
+                'name' => '{id_field}'
+            ));
+        }
+
+        $fieldset = $form->addFieldset('general', array(
+            'legend' => Mage::helper('{module_name}')->__('General Information')
+        ));
+
+        // Name field
+        $fieldset->addField('name', 'text', array(
+            'name' => 'name',
+            'label' => Mage::helper('{module_name}')->__('Name'),
+            'title' => Mage::helper('{module_name}')->__('Name'),
+            'required' => true
+        ));
+
+        $form->setUseContainer(true);
+        $this->setForm($form);
+
+        return parent::_prepareForm();
+    }
+
+    /**
+     * Initialize form fields values
+     * Method will be called after prepareForm and can be used for field values initialization
+     * @access protected
+     * @return {Module_Name}_Block_{Name}
+     */
+    protected function _initFormValues()
+    {
+        $entity = Mage::registry('current_{current}');
+        $this->getForm()->setValues($entity->getData());
+
+        return $this;
+    }
+
+// {COMPANY_NAME} Tag NEW_METHOD
+
+}
+END form_block
+
 BEGIN misc
 <_?php
 {COPYRIGHT}
@@ -2978,7 +3217,77 @@ BEGIN grid_controller_methods
 
 END grid_controller_methods
 
-BEGIN tmp
+BEGIN form_controller_methods
+    /**
+     * New {entity}
+     * @access public
+     * @return void
+     */
+    public function newAction()
+    {
+        $this->_forward('edit');
+    }
+
+    /**
+     * Edit {entity}
+     * @access public
+     * @return void
+     */
+    public function editAction()
+    {
+        // Object
+        $object = Mage::getModel('{entity_mage_identifier}')->load($this->getRequest()->getParam('id', false));
+        Mage::register('current_{current}', $object);
+
+        // Layout
+        $this->loadLayout();
+
+        // Title
+        if ($object->getId()) {
+            $this->_title($this->__('Edit {Entity}'));
+        } else {
+            $this->_title($this->__('New {Entity}'));
+        }
+
+        // Content
+        $edit = $this->getLayout()->createBlock('{module_name}/{form_name}', 'edit_form');
+        $this->_addContent($edit);
+
+        // Render
+        $this->renderLayout();
+    }
+
+    /**
+     * Save {entity}
+     * @access public
+     * @return void
+     */
+    public function saveAction()
+    {
+        // Object
+        $id     = $this->getRequest()->getParam('id', false);
+        $object = Mage::getModel('{entity_mage_identifier}')->load($id);
+
+        // No object?
+        if (!$object->getId()) {
+            $this->_getSession()->addError($this->__('{Entity} not found.'));
+            $this->_redirectReferer();
+            return;
+        }
+
+        // Save it
+        try {
+            $object->save();
+        } catch (Mage_Core_Exception $e) {
+            $this->_getSession()->addError($this->__('An error occurred.'));
+            $this->_redirectReferer();
+            return;
+        }
+
+        // Success
+        $this->_getSession()->addSuccess($this->__('{Entity} saved successfully.'));
+        $this->_redirect('*/*/index');
+    }
 
     /**
      * Delete {entity}
@@ -2989,7 +3298,7 @@ BEGIN tmp
     {
         // Object
         $id     = $this->getRequest()->getParam('id', false);
-        $object = Mage::getModel('{module_name}/{name}')->load($id);
+        $object = Mage::getModel('{entity_mage_identifier}')->load($id);
 
         // No object?
         if (!$object->getId()) {
@@ -3012,7 +3321,7 @@ BEGIN tmp
         $this->_redirect('*/*/index');
     }
 
-END tmp
+END form_controller_methods
 
 BEGIN is_allowed_method
 
