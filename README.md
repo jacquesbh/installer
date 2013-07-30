@@ -25,6 +25,7 @@ $ git config jbh-installer.company-url "http://example.org"
 
 You can use the following configuration path:
 
+*   `path`: The path to the "app" directory. (optional)
 *   `company-name`: The name of your company.
 *   `company-name-short`: The namespace of your company.
 *   `company-url`: The website url of your company.

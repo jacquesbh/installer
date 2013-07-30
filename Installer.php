@@ -67,6 +67,7 @@ class Installer
         // Configuration
         $this->_config                      = (object) array();
         $this->_config->pwd                 = defined('PWD') ? PWD : getenv('PWD');
+        $this->_config->path                = $this->getGit('path', '');
         $this->_config->license             = $this->getGit('license', 'All rights reserved');
         $this->_config->user_email          = $this->getGit('user-email');
         $this->_config->user_name           = $this->getGit('user-name');
@@ -2415,7 +2416,8 @@ HELP;
 
     public function getAppDir()
     {
-        return $this->_config->pwd . '/app/';
+        $path = trim($this->_config->path, '/');
+        return $this->_config->pwd . (!empty($path) ? '/' . $path : '') . '/app/';
     }
 
     public function getPoolDir()
