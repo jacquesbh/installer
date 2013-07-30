@@ -2301,7 +2301,8 @@ HELP;
             }
         }
 
-        $varDir = $this->_config->pwd . '/var/';
+        $path = trim($this->_config->path, '/');
+        $varDir = $this->_config->pwd . (!empty($path) ? '/' . $path : '') . '/var/';
         if (is_dir($varDir)) {
             if ($logs) {
                 $logDir = $varDir . 'log/';
