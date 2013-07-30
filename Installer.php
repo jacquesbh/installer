@@ -12,27 +12,13 @@ declare( ticks = 1 );
 
 ini_set('date.timezone', 'Europe/Paris');
 
-defined('PWD')                  || define('PWD', getenv('PWD'));
-defined('LICENSE')              || define('LICENSE', getenv('LICENSE') ? getenv('LICENSE') : 'All rights reserved');
-defined('USER_EMAIL')           || define('USER_EMAIL', getenv('USER_EMAIL') ? getenv('USER_EMAIL') : '');
-defined('USER_NAME')            || define('USER_NAME', getenv('USER_NAME') ? getenv('USER_NAME') : '');
-defined('DESIGN')               || define('DESIGN', getenv('DESIGN') ? getenv('DESIGN') : 'base_default');
-defined('COMPANY_NAME')         || define('COMPANY_NAME', getenv('COMPANY_NAME') ? getenv('COMPANY_NAME') : '');
-defined('COMPANY_NAME_SHORT')   || define('COMPANY_NAME_SHORT', getenv('COMPANY_NAME_SHORT') ? getenv('COMPANY_NAME_SHORT') : '');
-defined('COMPANY_URL')          || define('COMPANY_URL', getenv('COMPANY_URL') ? getenv('COMPANY_URL') : '');
-defined('LOCALES')              || define('LOCALES', getenv('LOCALES') ? getenv('LOCALES') : 'fr_FR,en_US');
-defined('OS')                   || define('OS', getenv('OS') ? getenv('OS') : (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'windows' : 'unix'));
-defined('DEBUG_ENABLED')        || define('DEBUG_ENABLED', getenv('DEBUG_ENABLED') ? getenv('DEBUG_ENABLED') : false);
+defined('OS') || define('OS', strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'windows' : 'unix');
 
-function red()      { return isUnix() ? "\033[01;31m" : ""; }
-function yellow()   { return isUnix() ? "\033[01;33m" : ""; }
-function blue()     { return isUnix() ? "\033[01;34m" : ""; }
-function green()    { return isUnix() ? "\033[01;32m" : ""; }
-function white()    { return isUnix() ? "\033[00m" : ""; }
-
-function isUnix()   { return (OS == 'unix'); }
-
-function debug($var) { if (DEBUG_ENABLED) { echo "\n\n" . green(); var_dump($var); echo white() . "\n\n"; } }
+function red()      { return Installer::isUnix() ? "\033[01;31m" : ""; }
+function yellow()   { return Installer::isUnix() ? "\033[01;33m" : ""; }
+function blue()     { return Installer::isUnix() ? "\033[01;34m" : ""; }
+function green()    { return Installer::isUnix() ? "\033[01;32m" : ""; }
+function white()    { return Installer::isUnix() ? "\033[00m" : ""; }
 
 // Read functions
 if (!function_exists('readline')) {
@@ -65,7 +51,7 @@ class Installer
     protected $_module;
 
     protected $_params;
-    protected $_config;
+    protected $_mageConfig;
 
     protected $_stop = false;
 
@@ -74,11 +60,25 @@ class Installer
 
     protected $_cli = true;
 
+    static protected $_config = null;
+
     public function __construct(array $argv, $useCmdLine = true)
     {
+        // Configuration
+        $this->_config                      = (object) array();
+        $this->_config->pwd                 = defined('PWD') ? PWD : getenv('PWD');
+        $this->_config->license             = $this->getGit('license', 'All rights reserved');
+        $this->_config->user_email          = $this->getGit('user-email');
+        $this->_config->user_name           = $this->getGit('user-name');
+        $this->_config->design              = $this->getGit('design', 'base_default');
+        $this->_config->company_name        = $this->getGit('company-name');
+        $this->_config->company_name_short  = $this->getGit('company-name-short');
+        $this->_config->company_url         = $this->getGit('company-url');
+        $this->_config->locales             = $this->getGit('locales', 'fr_FR,en_US');
+
         // Welcome message
         echo green() . "The Installer - by jacquesbh\n";
-        if (isUnix()) {
+        if (self::isUnix()) {
             echo "\033]0;" . "The Installer" . "\007";
         }
 
@@ -98,6 +98,35 @@ class Installer
 
         $this->_init($argv);
         $this->_start();
+    }
+
+    /**
+     * Is the operating system unix?
+     * @access public
+     * @static
+     * @return bool
+     */
+    static public function isUnix()
+    {
+        return (OS == 'unix');
+    }
+
+    /**
+     * Returns a git configuration
+     * @param $name string The configuration Name
+     * @access public
+     * @return string
+     */
+    public function getGit($name, $default = '')
+    {
+        $output = '';
+        $return = '';
+        exec('git config --get jbh-installer.' . $name, $output, $return);
+        if ($return === 1) {
+            return $default;
+        } else {
+            return trim($output[0]);
+        }
     }
 
     public function help()
@@ -386,8 +415,6 @@ HELP;
                 echo white() . 'Try help?' . "\n";
                 break;
         }
-
-        usleep(100000);
     }
 
     protected function _processAdminhtml(array $params)
@@ -461,7 +488,7 @@ HELP;
 
     protected function _processTmp(array $params)
     {
-        $this->_processModule(array(COMPANY_NAME_SHORT, 'tmp', 'local'), true);
+        $this->_processModule(array($this->_config->company_name_short, 'tmp', 'local'), true);
         $this->_processRouter(array('front', 'tmp'));
 
         if (empty($params)) {
@@ -972,7 +999,7 @@ HELP;
 
     protected function _processReloadConfig()
     {
-        $this->_config = null;
+        $this->_mageConfig = null;
     }
 
     protected function _processRouter(array $params)
@@ -1119,7 +1146,7 @@ HELP;
             $this->_namespace = null;
             $this->_module = null;
             $this->_pool = null;
-            $this->_config = null;
+            $this->_mageConfig = null;
         }
     }
 
@@ -1638,7 +1665,7 @@ HELP;
             if ($this->_pool == 'community') {
                 $dirs = array('base', 'default');
             } else {
-                $dirs = explode('_', DESIGN);
+                $dirs = explode('_', $this->_config->design);
             }
 
             foreach ($dirs as $d) {
@@ -2203,9 +2230,9 @@ HELP;
             if (isset($params[0])) {
                 $this->_namespace = ucfirst($params[0]);
             } else {
-                $this->_namespace = ucfirst($this->prompt("Namespace? (enter for " . COMPANY_NAME_SHORT . ")"));
+                $this->_namespace = ucfirst($this->prompt("Namespace? (enter for " . $this->_config->company_name_short . ")"));
                 if (empty($this->_namespace)) {
-                    $this->_namespace = COMPANY_NAME_SHORT;
+                    $this->_namespace = $this->_config->company_name_short;
                 }
             }
             // Module
@@ -2239,7 +2266,7 @@ HELP;
                 );
             }
 
-            $this->_config = null;
+            $this->_mageConfig = null;
 
             echo red() . "Using: " . white() . $this->getModuleName() . ' in ' . $this->_pool . "\n";
         }
@@ -2273,7 +2300,7 @@ HELP;
             }
         }
 
-        $varDir = PWD . '/var/';
+        $varDir = $this->_config->pwd . '/var/';
         if (is_dir($varDir)) {
             if ($logs) {
                 $logDir = $varDir . 'log/';
@@ -2303,7 +2330,7 @@ HELP;
 
     public function getLocales()
     {
-        return explode(',', LOCALES);
+        return explode(',', $this->_config->locales);
     }
 
     public function getConfigFilename()
@@ -2313,10 +2340,10 @@ HELP;
 
     public function getConfig()
     {
-        if (is_null($this->_config)) {
-            $this->_config = simplexml_load_file($this->getConfigFilename());
+        if (is_null($this->_mageConfig)) {
+            $this->_mageConfig = simplexml_load_file($this->getConfigFilename());
         }
-        return $this->_config;
+        return $this->_mageConfig;
     }
 
     public function getConfigVersion()
@@ -2328,11 +2355,11 @@ HELP;
 
     public function writeConfig()
     {
-        if (!is_null($this->_config)) {
+        if (!is_null($this->_mageConfig)) {
             $dom = new DOMDocument('1.0');
             $dom->preserveWhiteSpace = false;
             $dom->formatOutput = 4;
-            $dom->loadXML($this->_config->asXML());
+            $dom->loadXML($this->_mageConfig->asXML());
             $tidy = tidy_parse_string($dom->saveXml(), array(
                 'indent' => true,
                 'input-xml' => true,
@@ -2344,7 +2371,7 @@ HELP;
             $tidy->cleanRepair();
             file_put_contents($this->getConfigFilename(), (string) $tidy);
             unset($dom);
-            $this->_config = null;
+            $this->_mageConfig = null;
         }
     }
 
@@ -2363,13 +2390,13 @@ HELP;
             '<_?xml' => '<?xml',
             '{Module_Name}' => $this->getModuleName(),
             '{module_name}' => strtolower($this->getModuleName()),
-            '{LICENSE}' => LICENSE,
-            '{USER_NAME}' => utf8_encode(USER_NAME),
-            '{USER_EMAIL}' => USER_EMAIL,
+            '{LICENSE}' => $this->_config->license,
+            '{USER_NAME}' => utf8_encode($this->_config->user_name),
+            '{USER_EMAIL}' => $this->_config->user_email,
             '{Namespace}' => $this->_namespace,
             '{date_year}' => date('Y'),
-            '{COMPANY_NAME}' => utf8_encode(COMPANY_NAME),
-            '{COMPANY_URL}' => COMPANY_URL
+            '{COMPANY_NAME}' => utf8_encode($this->_config->company_name),
+            '{COMPANY_URL}' => $this->_config->company_url
         );
 
         if ($name !== 'copyright') {
@@ -2383,12 +2410,12 @@ HELP;
 
     public function getMiscDir()
     {
-        return PWD . '/misc/';
+        return $this->_config->pwd . '/misc/';
     }
 
     public function getAppDir()
     {
-        return PWD . '/app/';
+        return $this->_config->pwd . '/app/';
     }
 
     public function getPoolDir()
@@ -2427,7 +2454,7 @@ HELP;
     public function getDesignDir($where, $child = '')
     {
         $dir = $this->getAppDir() . 'design/' . $where . '/';
-        $names = explode('_', DESIGN);
+        $names = explode('_', $this->_config->design);
 
         if ($child) {
             $names[] = strtolower($child);
@@ -2461,7 +2488,7 @@ HELP;
 
     public function getTag($name)
     {
-        return '// ' . COMPANY_NAME . ' Tag ' . strtoupper($name);
+        return '// ' . $this->_config->company_name . ' Tag ' . strtoupper($name);
     }
 
     public function prompt($text)

@@ -10,21 +10,40 @@ NOTE: This is the first version. Any idea for the second one?
 
 ## Howto
 
+### Configure
+
+Each time I need to use The Installer, I've a git repository.  
+Because it's always a Magento project and I always use git as SCM.
+
+```sh
+$ git config jbh-installer.company-name "The Company"
+$ git config jbh-installer.company-name-short "company"
+$ git config jbh-installer.user-name "John Doe"
+$ git config jbh-installer.user-email "john.doe@example.org"
+$ git config jbh-installer.company-url "http://example.org"
+```
+
+You can use the following configuration path:
+
+*   `company-name`: The name of your company.
+*   `company-name-short`: The namespace of your company.
+*   `company-url`: The website url of your company.
+*   `user-name`: Your name.
+*   `user-email`: Your email.
+*   `license`: The license used. "All rights reserved" as default.
+*   `design`: The project's design. "base_default" as default.
+*   `locales`: The project's locales. "fr_FR,en_US" as default.
+
 ### Bash function required
 
 ```sh
 function jbh () {
-    export USER_EMAIL="jacques@bodin-hullin.net"
-    export USER_NAME="Jacques Bodin-Hullin"
-    export DESIGN="base_default"
-    export COMPANY_NAME="Jacques Bodin-Hullin"
-    export COMPANY_NAME_SHORT="Jbh"
-    export COMPANY_URL="http://jacques.sh/"
-    export LOCALES="fr_FR,en_US"
     # ==> /!\ the Installer path ;)
     /usr/local/bin/php -f ~/.bin/Installer/Installer.php $@;
 }
 ```
+
+You can use the binary `bin/Installer` too.
 
 ### Run it!
 
@@ -64,6 +83,10 @@ Type `?`!
      | resources            | res                   |                                           |
      | entity               | ent                   | name table                                |
      | grid                 |                       | entity                                    |
+     | form                 |                       | entity                                    |
+     |----------------------|-----------------------|-------------------------------------------|
+     | COMMAND              | ALIAS                 | PARAMETERS                                |
+     |----------------------|-----------------------|-------------------------------------------|
      | setup                | sql set               |                                           |
      | upgrade              | up                    | [from] to                                 |
      | event                |                       | name model method where                   |
