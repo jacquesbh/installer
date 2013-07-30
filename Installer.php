@@ -1779,10 +1779,19 @@ HELP;
 
         $filename = $dir . $name . 'Controller.php';
         if (!is_file($filename)) {
-            file_put_contents($filename, $this->getTemplate('controller_class', array(
+            $content = $this->getTemplate('controller_class', array(
                 '{Name}' => implode('_', $names) . (empty($names) ? '' : '_') . $name,
                 'Mage_Core_Controller_Front_Action' => $isAdminhtml ? 'Mage_Adminhtml_Controller_Action' : 'Mage_Core_Controller_Front_Action'
-            )));
+            ));
+
+            // Is allowed method
+            if ($isAdminhtml) {
+                $tag = $this->getTag('new_method');
+                $method = $this->getTemplate('is_allowed_method');
+                $content = str_replace($tag, "$tag\n" . $method, $content);
+            }
+
+            file_put_contents($filename, $content);
         }
 
         if (empty($params)) {
@@ -3004,4 +3013,17 @@ BEGIN tmp
     }
 
 END tmp
+
+BEGIN is_allowed_method
+
+    /**
+     * Is allowed?
+     * @access protected
+     * @return bool
+     */
+    protected function _isAllowed()
+    {
+        return true;
+    }
+END is_allowed_method
 
