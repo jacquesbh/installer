@@ -3064,7 +3064,7 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Form_Contai
         $this->_controller = '{controller}';
         $this->_mode       = 'edit';
 
-        $this->setFormActionUrl($this->getUrl('*/*/save'));
+        $this->setFormActionUrl($this->getUrl('*/*/save', array('id' => $this->_getObject()->getId())));
 
         return $this;
     }
@@ -3077,9 +3077,9 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Form_Contai
     public function getHeaderText()
     {
         if ($this->_getObject()->getId()) {
-            $header = 'New {Entity}';
-        } else {
             $header = 'Edit {Entity}';
+        } else {
+            $header = 'New {Entity}';
         }
         return $this->__($header);
     }
@@ -3295,15 +3295,9 @@ BEGIN form_controller_methods
         $id     = $this->getRequest()->getParam('id', false);
         $object = Mage::getModel('{entity_mage_identifier}')->load($id);
 
-        // No object?
-        if (!$object->getId()) {
-            $this->_getSession()->addError($this->__('{Entity} not found.'));
-            $this->_redirectReferer();
-            return;
-        }
-
         // Save it
         try {
+            $object->addData($this->getRequest()->getPost());
             $object->save();
         } catch (Mage_Core_Exception $e) {
             $this->_getSession()->addError($this->__('An error occurred.'));
