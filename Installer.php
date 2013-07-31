@@ -1108,7 +1108,10 @@ HELP;
             $config = $config->$name;
         }
 
-        $config[0] = $value;
+        // Adding text as cdata
+        $node = dom_import_simplexml($config[0]);
+        $no = $node->ownerDocument;
+        $node->appendChild($no->createCDATASection($value));
 
         $this->writeConfig();
     }
