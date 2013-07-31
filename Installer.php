@@ -2371,7 +2371,11 @@ HELP;
                 'output-xml' => true,
                 'add-xml-space' => false,
                 'indent-spaces' => 4,
-                'wrap' => 300
+                'wrap' => 0,
+                'escape-cdata' => false,
+                'wrap-sections' => false,
+                'indent-cdata' => false,
+                'output-encoding' => 'utf8',
             ));
             $tidy->cleanRepair();
             file_put_contents($this->getConfigFilename(), (string) $tidy);
