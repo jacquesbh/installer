@@ -579,7 +579,7 @@ HELP;
         ));
 
         // Grid controller..
-        $this->_processController(array('adminhtml_' . $entity, '-'), compact('methods'));
+        $this->_processController(array('adminhtml_' . strtolower($this->_module) .'_'. strtolower($entity) , '-'), compact('methods'));
 
         // Helper data
         $this->_processHelper(array('data', '-'));
@@ -675,7 +675,7 @@ HELP;
         ));
 
         // Grid controller..
-        $this->_processController(array('adminhtml_' . $entity, '-'), compact('methods'));
+        $this->_processController(array('adminhtml_' . strtolower($this->_module) .'_'. strtolower($entity) , '-'), compact('methods'));
 
         // Helper data
         $this->_processHelper(array('data', '-'));
