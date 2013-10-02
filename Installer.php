@@ -1024,8 +1024,8 @@ HELP;
             $where .= 'end';
         }
 
-		//We define frontname only for front router
-        if (empty($params) && $where == 'front') {
+		// We define frontname only for front router
+        if (empty($params) && $where == 'frontend') {
             do {
                 $frontName = $this->prompt('Front name?');
             } while (empty($frontName));
@@ -1046,15 +1046,15 @@ HELP;
         }
 
         // Module
-        //If is admin router we use adminhtml router
+        // If is admin router we use adminhtml router
         $routerName = ($where == 'admin') ? 'adminhtml' : strtolower($this->getModuleName());
         if (!$moduleRoute = $routers->{$routerName}) {
             $moduleRoute = $routers->addChild($routerName);
         }
 
         // Use
-        if (!$moduleRoute->use) {
-           ($where == 'frontend') ? $moduleRoute->addChild('use','standard'):'';
+        if (!$moduleRoute->use && $where == 'frontend') {
+            $moduleRoute->addChild('use','standard');
         }
 
         // Args
@@ -1062,19 +1062,18 @@ HELP;
             $args = $moduleRoute->addChild('args');
         }
 
-        // module
+        // module(s)
         if (!$args->module) {
-            ($where == 'frontend') ? $args->addChild('module', $this->getModuleName()):'';
-        }
-        
-        //modules
-        //We add the modules node for admin router as if we rewrite a controller
-        if (!$args->modules) {
-            if($where == 'admin')
-            {
+            if ($where == 'frontend') {
+                $args->addChild('module', $this->getModuleName());
+            } else {
+                // We add the modules node for admin router as if we rewrite a controller
 				$modules = $args->addChild('modules');
-				$modules->addChild(strtolower($this->getModuleName()),$this->getModuleName().'_Adminhtml')->addAttribute('after','Mage_Adminhtml');
-			}
+                $modules
+                    ->addChild(strtolower($this->getModuleName()), $this->getModuleName() . '_Adminhtml')
+                    ->addAttribute('after','Mage_Adminhtml')
+                ;
+            }
         }
 
         // frontName
