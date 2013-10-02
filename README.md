@@ -8,6 +8,14 @@ The "Installer" is a *simple* shell which allows you to create custom modules on
 
 NOTE: This is the first version. Any idea for the second one?
 
+## Install
+
+### On Windows
+
+Please [install PHP](http://windows.php.net/download/#php-5.3) and [Git](http://git-scm.com).
+
+Then start a Git Bash on your repo, configure, and run ;)
+
 ## Howto
 
 ### Configure
