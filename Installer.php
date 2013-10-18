@@ -84,7 +84,6 @@ class Installer
                 $this->_config->license = $this->prompt('Define your license?');
             } while (empty($this->_config->license));
 			
-            $this->_config->license = $license;
             exec('git config jbh-installer.license "' . $this->_config->license.'"', $output, $return);
         }
         
