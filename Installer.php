@@ -14,6 +14,8 @@ ini_set('date.timezone', 'Europe/Paris');
 
 defined('OS') || define('OS', strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'windows' : 'unix');
 
+defined('GIT_PATH') || define('GIT_PATH', exec('which git'));
+
 function red()      { return Installer::isUnix() ? "\033[01;31m" : ""; }
 function yellow()   { return Installer::isUnix() ? "\033[01;33m" : ""; }
 function blue()     { return Installer::isUnix() ? "\033[01;34m" : ""; }
@@ -65,72 +67,17 @@ class Installer
     public function __construct(array $argv, $useCmdLine = true)
     {
         // Configuration
-        $this->_config                      = (object) array();
-        $this->_config->pwd                 = defined('PWD') ? PWD : getenv('PWD');
-        $this->_config->path                = $this->getGit('path', '');
-        $this->_config->license             = $this->getGit('license', '');
-        $this->_config->user_email          = $this->getGit('user-email');
-        $this->_config->user_name           = $this->getGit('user-name');
-        $this->_config->design              = $this->getGit('design', 'base_default');
-        $this->_config->company_name        = $this->getGit('company-name');
-        $this->_config->company_name_short  = $this->getGit('company-name-short');
-        $this->_config->company_url         = $this->getGit('company-url');
-        $this->_config->locales             = $this->getGit('locales', 'fr_FR,en_US');
-
-        // Define your configuration
-        if(empty($this->_config->license))
-        {
-            do {
-                $this->_config->license = $this->prompt('Define your license?');
-            } while (empty($this->_config->license));
-
-            exec('git config jbh-installer.license "' . $this->_config->license.'"', $output, $return);
-        }
-
-        if(empty($this->_config->user_email))
-        {
-            do {
-                $this->_config->user_email = $this->prompt('Define your email?');
-            } while (empty($this->_config->user_email));
-
-            exec('git config jbh-installer.user-email "' . $this->_config->user_email.'"', $output, $return);
-        }
-
-        if(empty($this->_config->user_name))
-        {
-            do {
-                $this->_config->user_name = $this->prompt('Define your name?');
-            } while (empty($this->_config->user_name));
-
-            exec('git config jbh-installer.user-name "' . $this->_config->user_name.'"', $output, $return);
-        }
-
-        if(empty($this->_config->company_name))
-        {
-            do {
-                $this->_config->company_name = $this->prompt('Define your company name?');
-            } while (empty($this->_config->company_name));
-
-            exec('git config jbh-installer.company-name "' . $this->_config->company_name.'"', $output, $return);
-        }
-
-        if(empty($this->_config->company_name_short))
-        {
-            do {
-                $this->_config->company_name_short = $this->prompt('Define your company short name?');
-            } while (empty($this->_config->company_name_short));
-
-            exec('git config jbh-installer.company-name-short "' . $this->_config->company_name_short.'"', $output, $return);
-        }
-
-        if(empty($this->_config->company_url))
-        {
-            do {
-                $this->_config->company_url = $this->prompt('Define your company url?');
-            } while (empty($this->_config->company_url));
-
-            exec('git config jbh-installer.company-url "' . $this->_config->company_url.'"', $output, $return);
-        }
+        self::$_config                      = (object) array();
+        self::$_config->pwd                 = defined('PWD') ? PWD : getenv('PWD');
+        self::$_config->path                = $this->getGit('path', '');
+        self::$_config->license             = $this->getGit('license', '');
+        self::$_config->user_email          = $this->getGit('user-email');
+        self::$_config->user_name           = $this->getGit('user-name');
+        self::$_config->design              = $this->getGit('design', 'base_default');
+        self::$_config->company_name        = $this->getGit('company-name');
+        self::$_config->company_name_short  = $this->getGit('company-name-short');
+        self::$_config->company_url         = $this->getGit('company-url');
+        self::$_config->locales             = $this->getGit('locales', 'fr_FR,en_US');
 
         // Welcome message
         echo green() . "The Installer - by jacquesbh\n";
@@ -148,6 +95,57 @@ class Installer
         if (!function_exists('tidy_parse_string')) {
             echo red() . "Tidy is required ! http://tidy.sourceforge.net/\n";
             exit;
+        }
+
+        /*
+         * Define your configuration
+         */
+        // The license
+        if (empty(self::$_config->license)) {
+            do {
+                self::$_config->license = $this->prompt('Your license?');
+            } while (empty(self::$_config->license));
+            exec(GIT_PATH . ' config jbh-installer.license "' . self::$_config->license.'"');
+        }
+
+        // The user's email
+        if (empty(self::$_config->user_email)) {
+            do {
+                self::$_config->user_email = $this->prompt('Your email?');
+            } while (empty(self::$_config->user_email));
+            exec(GIT_PATH . ' config jbh-installer.user-email "' . self::$_config->user_email.'"');
+        }
+
+        // The user's name
+        if (empty(self::$_config->user_name)) {
+            do {
+                self::$_config->user_name = $this->prompt('Your name?');
+            } while (empty(self::$_config->user_name));
+            exec(GIT_PATH . ' config jbh-installer.user-name "' . self::$_config->user_name.'"');
+        }
+
+        // The company's name
+        if (empty(self::$_config->company_name)) {
+            do {
+                self::$_config->company_name = $this->prompt('Your company name?');
+            } while (empty(self::$_config->company_name));
+            exec(GIT_PATH . ' config jbh-installer.company-name "' . self::$_config->company_name.'"');
+        }
+
+        // The company's short name
+        if (empty(self::$_config->company_name_short)) {
+            do {
+                self::$_config->company_name_short = $this->prompt('Your company short name?');
+            } while (empty(self::$_config->company_name_short));
+            exec(GIT_PATH . ' config jbh-installer.company-name-short "' . self::$_config->company_name_short.'"');
+        }
+
+        // The company's URL
+        if (empty(self::$_config->company_url)) {
+            do {
+                self::$_config->company_url = $this->prompt('Your company url?');
+            } while (empty(self::$_config->company_url));
+            exec(GIT_PATH . ' config jbh-installer.company-url "' . self::$_config->company_url.'"');
         }
 
         $this->setCli($useCmdLine);
@@ -544,7 +542,7 @@ HELP;
 
     protected function _processTmp(array $params)
     {
-        $this->_processModule(array($this->_config->company_name_short, 'tmp', 'local'), true);
+        $this->_processModule(array(self::$_config->company_name_short, 'tmp', 'local'), true);
         $this->_processRouter(array('front', 'tmp'));
 
         if (empty($params)) {
@@ -1735,7 +1733,7 @@ HELP;
             if ($this->_pool == 'community') {
                 $dirs = array('base', 'default');
             } else {
-                $dirs = explode('_', $this->_config->design);
+                $dirs = explode('_', self::$_config->design);
             }
 
             foreach ($dirs as $d) {
@@ -2300,9 +2298,9 @@ HELP;
             if (isset($params[0])) {
                 $this->_namespace = ucfirst($params[0]);
             } else {
-                $this->_namespace = ucfirst($this->prompt("Namespace? (enter for " . $this->_config->company_name_short . ")"));
+                $this->_namespace = ucfirst($this->prompt("Namespace? (enter for " . self::$_config->company_name_short . ")"));
                 if (empty($this->_namespace)) {
-                    $this->_namespace = $this->_config->company_name_short;
+                    $this->_namespace = self::$_config->company_name_short;
                 }
             }
             // Module
@@ -2370,8 +2368,8 @@ HELP;
             }
         }
 
-        $path = trim($this->_config->path, '/');
-        $varDir = $this->_config->pwd . (!empty($path) ? '/' . $path : '') . '/var/';
+        $path = trim(self::$_config->path, '/');
+        $varDir = self::$_config->pwd . (!empty($path) ? '/' . $path : '') . '/var/';
         if (is_dir($varDir)) {
             if ($logs) {
                 $logDir = $varDir . 'log/';
@@ -2401,7 +2399,7 @@ HELP;
 
     public function getLocales()
     {
-        return explode(',', $this->_config->locales);
+        return explode(',', self::$_config->locales);
     }
 
     public function getConfigFilename()
@@ -2461,17 +2459,17 @@ HELP;
         $template = preg_replace('`^(?:.+)?BEGIN ' . $name . "\n(.+)\nEND " . $name . '(?:.+)?$`is', '$1', $this->_templates);
 
         $searchAndReplace = array(
-            '<_?php' => '<?php',
-            '<_?xml' => '<?xml',
-            '{Module_Name}' => $this->getModuleName(),
-            '{module_name}' => strtolower($this->getModuleName()),
-            '{LICENSE}' => $this->_config->license,
-            '{USER_NAME}' => utf8_encode($this->_config->user_name),
-            '{USER_EMAIL}' => $this->_config->user_email,
-            '{Namespace}' => $this->_namespace,
-            '{date_year}' => date('Y'),
-            '{COMPANY_NAME}' => utf8_encode($this->_config->company_name),
-            '{COMPANY_URL}' => $this->_config->company_url
+            '<_?php'            => '<?php',
+            '<_?xml'            => '<?xml',
+            '{Module_Name}'     => $this->getModuleName(),
+            '{module_name}'     => strtolower($this->getModuleName()),
+            '{LICENSE}'         => self::$_config->license,
+            '{USER_NAME}'       => utf8_encode(self::$_config->user_name),
+            '{USER_EMAIL}'      => self::$_config->user_email,
+            '{Namespace}'       => $this->_namespace,
+            '{date_year}'       => date('Y'),
+            '{COMPANY_NAME}'    => utf8_encode(self::$_config->company_name),
+            '{COMPANY_URL}'     => self::$_config->company_url
         );
 
         if ($name !== 'copyright') {
@@ -2485,13 +2483,13 @@ HELP;
 
     public function getMiscDir()
     {
-        return $this->_config->pwd . '/misc/';
+        return self::$_config->pwd . '/misc/';
     }
 
     public function getAppDir()
     {
-        $path = trim($this->_config->path, '/');
-        return $this->_config->pwd . (!empty($path) ? '/' . $path : '') . '/app/';
+        $path = trim(self::$_config->path, '/');
+        return self::$_config->pwd . (!empty($path) ? '/' . $path : '') . '/app/';
     }
 
     public function getPoolDir()
@@ -2530,7 +2528,7 @@ HELP;
     public function getDesignDir($where, $child = '')
     {
         $dir = $this->getAppDir() . 'design/' . $where . '/';
-        $names = explode('_', $this->_config->design);
+        $names = explode('_', self::$_config->design);
 
         if ($child) {
             $names[] = strtolower($child);
@@ -2564,7 +2562,7 @@ HELP;
 
     public function getTag($name)
     {
-        return '// ' . $this->_config->company_name . ' Tag ' . strtoupper($name);
+        return '// ' . self::$_config->company_name . ' Tag ' . strtoupper($name);
     }
 
     public function prompt($text)
