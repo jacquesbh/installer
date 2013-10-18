@@ -68,7 +68,7 @@ class Installer
         $this->_config                      = (object) array();
         $this->_config->pwd                 = defined('PWD') ? PWD : getenv('PWD');
         $this->_config->path                = $this->getGit('path', '');
-        $this->_config->license             = $this->getGit('license', 'All rights reserved');
+        $this->_config->license             = $this->getGit('license', '');
         $this->_config->user_email          = $this->getGit('user-email');
         $this->_config->user_name           = $this->getGit('user-name');
         $this->_config->design              = $this->getGit('design', 'base_default');
