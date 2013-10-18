@@ -68,7 +68,7 @@ class Installer
         $this->_config                      = (object) array();
         $this->_config->pwd                 = defined('PWD') ? PWD : getenv('PWD');
         $this->_config->path                = $this->getGit('path', '');
-        $this->_config->license             = $this->getGit('license', 'All rights reserved');
+        $this->_config->license             = $this->getGit('license', '');
         $this->_config->user_email          = $this->getGit('user-email');
         $this->_config->user_name           = $this->getGit('user-name');
         $this->_config->design              = $this->getGit('design', 'base_default');
@@ -76,7 +76,62 @@ class Installer
         $this->_config->company_name_short  = $this->getGit('company-name-short');
         $this->_config->company_url         = $this->getGit('company-url');
         $this->_config->locales             = $this->getGit('locales', 'fr_FR,en_US');
-
+		
+		// Define your configuration
+		if(empty($this->_config->license))
+		{
+			do {
+                $this->_config->license = $this->prompt('Define your license?');
+            } while (empty($this->_config->license));
+			
+            exec('git config jbh-installer.license "' . $this->_config->license.'"', $output, $return);
+        }
+        
+        if(empty($this->_config->user_email))
+		{
+			do {
+                $this->_config->user_email = $this->prompt('Define your email?');
+            } while (empty($this->_config->user_email));
+			
+            exec('git config jbh-installer.user-email "' . $this->_config->user_email.'"', $output, $return);
+        }
+        
+        if(empty($this->_config->user_name))
+		{
+			do {
+                $this->_config->user_name = $this->prompt('Define your name?');
+            } while (empty($this->_config->user_name));
+			
+            exec('git config jbh-installer.user-name "' . $this->_config->user_name.'"', $output, $return);
+        }
+        
+        if(empty($this->_config->company_name))
+		{
+			do {
+                $this->_config->company_name = $this->prompt('Define your company name?');
+            } while (empty($this->_config->company_name));
+			
+            exec('git config jbh-installer.company-name "' . $this->_config->company_name.'"', $output, $return);
+        }
+        
+        if(empty($this->_config->company_name_short))
+		{
+			do {
+                $this->_config->company_name_short = $this->prompt('Define your company short name?');
+            } while (empty($this->_config->company_name_short));
+			
+            exec('git config jbh-installer.company-name-short "' . $this->_config->company_name_short.'"', $output, $return);
+        }
+        
+        if(empty($this->_config->company_url))
+		{
+			do {
+                $this->_config->company_url = $this->prompt('Define your company url?');
+            } while (empty($this->_config->company_url));
+			
+            exec('git config jbh-installer.company-url "' . $this->_config->company_url.'"', $output, $return);
+        }
+		
         // Welcome message
         echo green() . "The Installer - by jacquesbh\n";
         if (self::isUnix()) {
