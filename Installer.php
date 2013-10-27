@@ -1401,7 +1401,7 @@ HELP;
     {
         if (empty($params)) {
             do {
-                $eventName = $this->prompt('Event?');
+                $eventName = $this->prompt('Event Name?');
             } while (empty($eventName));
         } else {
             $eventName = array_shift($params);
@@ -1409,7 +1409,7 @@ HELP;
 
         if (empty($params)) {
             do {
-                $name = $this->prompt('Name?');
+                $name = $this->prompt('Observer Name?');
             } while (empty($name));
         } else {
             $name = array_shift($params);
