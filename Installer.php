@@ -229,6 +229,7 @@ class Installer
  | system               |                       |                                           |
  | adminhtml            |                       |                                           |
  | session              |                       | [methods]                                 |
+ | email                | mail                  | name                                      |
  |                      |                       |                                           |
   ---------------------- ----------------------- -------------------------------------------
 
@@ -458,6 +459,11 @@ HELP;
             case 'system':
                 $this->_processModule();
                 $this->_processSystem($params);
+                break;
+            case 'email':
+            case 'mail':
+                $this->_processModule();
+                $this->_processEmail($params);
                 break;
             case 'session':
                 $this->_processModule();
@@ -1904,7 +1910,7 @@ HELP;
         return array($dir, $created);
     }
 
-    protected function _processModel(array $params, $type = 'model')
+    protected function _processModel(array $params, $type = 'model', array $data = array())
     {
         if (empty($params)) {
             do {
@@ -1941,6 +1947,21 @@ HELP;
 
         $content = file_get_contents($filename);
         $this->replaceVarsAndMethods($content, $params, $type);
+
+        // Other data
+        if (isset($data['consts'])) {
+            $tag = $this->getTag('new_const');
+            $content = str_replace($tag, $data['consts'] . "\n$tag", $content);
+        }
+        if (isset($data['vars'])) {
+            $tag = $this->getTag('new_var');
+            $content = str_replace($tag, $data['vars'] . "\n$tag", $content);
+        }
+        if (isset($data['methods'])) {
+            $tag = $this->getTag('new_method');
+            $content = str_replace($tag, $data['methods'] . "\n$tag", $content);
+        }
+
         file_put_contents($filename, $content);
 
         $this->setLast(__FUNCTION__, $officialName);
@@ -2015,6 +2036,93 @@ HELP;
         file_put_contents($filename, $content);
 
         $this->setLast(__FUNCTION__, $officialName);
+    }
+
+    /**
+     * Create a custom email template with the good configuration and file
+     */
+    protected function _processEmail(array $params)
+    {
+        // Get email name
+        if (empty($params)) {
+            do {
+                $name = $this->prompt('Email identifier?');
+            } while (empty($name));
+        }
+        $name = strtolower($name);
+
+        // Configuration
+        $config = $this->getConfig();
+
+        // Create templte node if not exists
+        if (!isset($config->global)) {
+            $config->addChild('global');
+        }
+        $global = $config->global;
+
+        if (!isset($global->template)) {
+            $global->addChild('template');
+        }
+        $template = $global->template;
+
+        if (!isset($template->email)) {
+            $template->addChild('email');
+        }
+        $email = $template->email;
+
+        // Create email node
+        $moduleName = strtolower($this->getModuleName());
+        $node = $email->addChild($moduleName . '_email_' . $name);
+        $node->addAttribute('translate', 'label');
+        $node->addAttribute('module', strtolower($this->getModuleName()));
+
+        $ext = '.html';
+        $node->addChild('label', 'Your email template name');
+        $node->addChild('file', $moduleName . '/' . $name . $ext);
+        $node->addChild('type', 'html');
+
+        // Default configuration
+        $this->_processDefault(array($moduleName . '/email/' . $name, $moduleName . '_email_' . $name));
+
+        // Save configuration
+        $this->writeconfig();
+
+        // Model
+        $this->_processModel(array(
+            'email',
+            'CONFIG_KEY_EMAIL_' . strtoupper($name) . "=$moduleName/email/$name"
+        ), 'model', array(
+            'methods' => $this->getTemplate('email_method', array(
+                '{NAME}' => strtoupper($name),
+                '{methodName}' => lcfirst($this->_camelize('send_' . $name)),
+                '{name}' => $name
+            ))
+        ));
+
+        // The file
+        $appDir = $this->getAppDir();
+        foreach ($this->getLocales() as $locale) {
+            $dir = $appDir . '/locale/' . $locale;
+            if (!is_dir($dir)) {
+                mkdir($dir, 755);
+            }
+            $templateDir = $dir . '/template';
+            if (!is_dir($templateDir)) {
+                mkdir($templateDir, 755);
+            }
+            $emailsDir = $templateDir . '/email';
+            if (!is_dir($emailsDir)) {
+                mkdir($emailsDir, 755);
+            }
+            $finalDir = $emailsDir . '/' . $moduleName;
+            if (!is_dir($finalDir)) {
+                mkdir($finalDir);
+            }
+            $filename = $finalDir . '/' . $name . $ext;
+            if (!is_file($filename)) {
+                file_put_contents($filename, $this->getTemplate('email_template'));
+            }
+        }
     }
 
     protected function _processBlock(array $params)
@@ -2569,6 +2677,17 @@ HELP;
     {
         echo white() . $text . "\n" . blue() . '> ' . white();
         return $this->_read(false);
+    }
+
+    /**
+     * Returns the name in camel case
+     * @param string $name The string to transform
+     * @access protected
+     * @return string
+     */
+    protected function _camelize($str)
+    {
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', $str)));
     }
 
     protected function _read($usePrompt = true)
@@ -3430,4 +3549,56 @@ BEGIN is_allowed_method
         return true;
     }
 END is_allowed_method
+
+BEGIN email_method
+    /**
+     * Send the email {name} to the customer
+     *
+     * @param Mage_Customer_Model_Customer $customer The customer
+     * @throws Mage_Core_Exception
+     * @access public
+     * @return bool
+     */
+    public function {methodName}($customer = null)
+    {
+        // Retrieve the customer
+        if (is_null($customer)) {
+            $customer = Mage::getSingleton('customer/session')->getCustomer();
+        } elseif (!($customer instanceof Mage_Customer_Model_Customer)) {
+            $customer = Mage::getModel('customer/customer')->load((int) $customer);
+        }
+
+        // The customer is required for our email
+        if (!$customer->getId()) {
+            Mage::throwException('Customer needed for this email.');
+        }
+
+        /*
+         * Send the email :)
+         *
+         * - Get the template
+         * - Send transactional
+         */
+        $emailTemplate = Mage::getModel('core/email_template');
+
+        /* @var $emailTemplate Mage_Core_Model_Email_Template */
+        return $emailTemplate
+            ->setDesignConfig(array('area' => 'frontend'))
+            ->sendTransactional(
+                Mage::getStoreConfig(self::CONFIG_KEY_EMAIL_{NAME}),
+                Mage::getStoreConfig('contacts/email/sender_email_identity'),
+                $customer->getEmail(),
+                null,
+                array(
+                    'customer' => $customer
+                )
+            );
+    }
+END email_method
+
+BEGIN email_template
+<!--@subject Email subject @-->
+
+Content
+END email_template
 
