@@ -1883,7 +1883,7 @@ HELP;
             $mysql4->addChild('class', $this->getModuleName() . '_Model_Mysql4');
             $mysql4->addChild('entities');
             $this->writeConfig();
-            mkdir($dir = $dir . 'Mysql4/');
+            @mkdir($dir = $dir . 'Mysql4/');
         }
 
         $this->_processReloadConfig();
