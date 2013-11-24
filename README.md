@@ -41,16 +41,15 @@ You can use the following configuration path:
 *   `design`: The project's design. "base_default" as default.
 *   `locales`: The project's locales. "fr_FR,en_US" as default.
 
-### Bash function required
+### Binary
 
-```sh
-function jbh () {
-    # ==> /!\ the Installer path ;)
-    /usr/local/bin/php -f ~/.bin/Installer/Installer.php $@;
-}
-```
+You can use the binary `bin/Installer`.
 
-You can use the binary `bin/Installer` too.
+Just create a simple symlink link.
+
+#### Installation example
+
+
 
 ### Run it!
 
@@ -111,6 +110,7 @@ Type `?`!
      | system               |                       |                                           |
      | adminhtml            |                       |                                           |
      | session              |                       | [methods]                                 |
+     | email                | mail                  | name                                      |
      |                      |                       |                                           |
       ---------------------- ----------------------- -------------------------------------------
     > 
