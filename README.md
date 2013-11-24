@@ -12,9 +12,7 @@ NOTE: This is the first version. Any idea for the second one?
 
 ### On Windows
 
-Please [install PHP](http://windows.php.net/download/#php-5.3) and [Git](http://git-scm.com).
-
-Then start a Git Bash on your repo, configure, and run ;)
+... Sorry dude ;)
 
 ## Howto
 
