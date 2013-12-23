@@ -156,7 +156,6 @@ class Installer
 
     /**
      * Is the operating system unix?
-     * @access public
      * @static
      * @return bool
      */
@@ -168,7 +167,6 @@ class Installer
     /**
      * Returns a git configuration
      * @param $name string The configuration Name
-     * @access public
      * @return string
      */
     public function getGit($name, $default = '')
@@ -2682,7 +2680,6 @@ HELP;
     /**
      * Returns the name in camel case
      * @param string $name The string to transform
-     * @access protected
      * @return string
      */
     protected function _camelize($str)
@@ -2892,7 +2889,6 @@ END block_class
 BEGIN public_method
     /**
      * short_description_here
-     * @access public
      * @return {return}
      */
     public function {name}({params})
@@ -2904,7 +2900,6 @@ END public_method
 BEGIN protected_method
     /**
      * short_description_here
-     * @access protected
      * @return {return}
      */
     protected function _{name}({params})
@@ -2916,7 +2911,6 @@ END protected_method
 BEGIN constructor_method
     /**
      * Main Constructor
-     * @access public
      * @return void
      */
     public function __construct({params})
@@ -2961,7 +2955,6 @@ BEGIN entity_class_construct
 
     /**
      * {Entity} Constructor
-     * @access protected
      * @return void
      */
     protected function _construct()
@@ -2988,7 +2981,6 @@ class {Module_Name}_Model_Mysql4_{Name} extends Mage_Core_Model_Mysql4_Abstract
 
     /**
      * {Name} Resource Constructor
-     * @access protected
      * @return void
      */
     protected function _construct()
@@ -3018,7 +3010,6 @@ class {Module_Name}_Model_Mysql4_{Name}_Collection extends Mage_Core_Model_Mysql
 
     /**
      * {Name} Collection Resource Constructor
-     * @access protected
      * @return void
      */
     protected function _construct()
@@ -3114,7 +3105,6 @@ END const_var
 BEGIN protected_var
     /**
      * short_description_here
-     * @access protected
      * @var {type}
      */
     protected ${name} = {value};
@@ -3123,7 +3113,6 @@ END protected_var
 BEGIN public_var
     /**
      * short_description_here
-     * @access public
      * @var {type}
      */
     public ${name} = {value};
@@ -3154,7 +3143,6 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Grid_Contai
 
     /**
      * Constructor Override
-     * @access protected
      * @return {Module_Name}_Block_{Name}
      */
     protected function _construct()
@@ -3170,7 +3158,6 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Grid_Contai
 
     /**
      * Prepare Layout
-     * @access protected
      * @return {Module_Name}_Block_{Name}
      */
     protected function _prepareLayout()
@@ -3201,7 +3188,6 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Grid
 
     /**
      * Get collection object
-     * @access public
      * @return {Collection_Model}
      */
     public function getCollection()
@@ -3216,7 +3202,6 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Grid
 
     /**
      * Prepare columns
-     * @access protected
      * @return {Module_Name}_Block_{Name}
      */
     protected function _prepareColumns()
@@ -3246,7 +3231,6 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Form_Contai
 
     /**
      * Constructor Override
-     * @access protected
      * @return {Module_Name}_Block_{Name}
      */
     protected function _construct()
@@ -3264,7 +3248,6 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Form_Contai
 
     /**
      * The header
-     * @access public
      * @return string
      */
     public function getHeaderText()
@@ -3279,7 +3262,6 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Form_Contai
 
     /**
      * Retrieve the {entity}
-     * @access protected
      * @return {Entity_Name}
      */
     protected function _getObject()
@@ -3351,7 +3333,6 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Form
     /**
      * Initialize form fields values
      * Method will be called after prepareForm and can be used for field values initialization
-     * @access protected
      * @return {Module_Name}_Block_{Name}
      */
     protected function _initFormValues()
@@ -3393,7 +3374,6 @@ END doc_readme
 BEGIN grid_controller_methods
     /**
      * Pre dispatch
-     * @access public
      * @return void
      */
     public function preDispatch()
@@ -3406,7 +3386,6 @@ BEGIN grid_controller_methods
 
     /**
      * List
-     * @access void
      * @return void
      */
     public function indexAction()
@@ -3416,7 +3395,6 @@ BEGIN grid_controller_methods
 
     /**
      * Grid
-     * @access public
      * @return void
      */
     public function gridAction()
@@ -3440,7 +3418,6 @@ END grid_controller_methods
 BEGIN form_controller_methods
     /**
      * New {entity}
-     * @access public
      * @return void
      */
     public function newAction()
@@ -3450,7 +3427,6 @@ BEGIN form_controller_methods
 
     /**
      * Edit {entity}
-     * @access public
      * @return void
      */
     public function editAction()
@@ -3479,7 +3455,6 @@ BEGIN form_controller_methods
 
     /**
      * Save {entity}
-     * @access public
      * @return void
      */
     public function saveAction()
@@ -3505,7 +3480,6 @@ BEGIN form_controller_methods
 
     /**
      * Delete {entity}
-     * @access public
      * @return void
      */
     public function deleteAction()
@@ -3541,7 +3515,6 @@ BEGIN is_allowed_method
 
     /**
      * Is allowed?
-     * @access protected
      * @return bool
      */
     protected function _isAllowed()
@@ -3556,7 +3529,6 @@ BEGIN email_method
      *
      * @param Mage_Customer_Model_Customer $customer The customer
      * @throws Mage_Core_Exception
-     * @access public
      * @return bool
      */
     public function {methodName}($customer = null)
