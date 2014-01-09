@@ -623,7 +623,7 @@ HELP;
                 '{Entity}' => end($names),
                 '{Name}' => implode('_', $names) . '_Grid',
                 '{resource_model_collection}' => strtolower($this->getModuleName()) . '/' . strtolower($entity) . '_collection',
-                '{Collection_Model}' => $this->getModuleName() . '_Model_Mysql4_' . implode('_', $entityTab) . '_Collection'
+                '{Collection_Model}' => $this->getModuleName() . '_Model_Resource_' . implode('_', $entityTab) . '_Collection'
              )));
         }
 
@@ -1516,7 +1516,7 @@ HELP;
         if (!isset($config->global)) {
             $config->addChild('global');
         }
-        $entities = $config->global->models->{strtolower($this->getModuleName() . '_mysql4')}->entities;
+        $entities = $config->global->models->{strtolower($this->getModuleName() . '_resource')}->entities;
 
         $entity = implode('_', array_map('ucfirst', explode('_', $name)));
 
@@ -1556,7 +1556,7 @@ HELP;
             )));
         }
 
-        $dir = $this->getModuleDir('Model') . 'Mysql4/';
+        $dir = $this->getModuleDir('Model') . 'Resource/';
 
         foreach ($names as $name) {
             if (!is_dir($dir = $dir . $name . '/')) {
@@ -1625,7 +1625,7 @@ HELP;
                 $to = array_shift($params);
             }
         }
-        echo 'Mysql4 Upgrade From ' . red() . $from . white() . ' to ' . red() . $to . white() . ".\n";
+        echo 'Upgrade From ' . red() . $from . white() . ' to ' . red() . $to . white() . ".\n";
 
         $setupClass = (string) $config
             ->global
@@ -1635,7 +1635,7 @@ HELP;
             ->class
         ;
 
-        $filename = $dir . 'mysql4-upgrade-' . $from . '-' . $to . '.php';
+        $filename = $dir . 'upgrade-' . $from . '-' . $to . '.php';
         if (!is_file($filename)) {
             file_put_contents($filename, $this->getTemplate('setup_class', array(
                 'Mage_Core_Model_Resource_Setup' => $setupClass
@@ -1686,7 +1686,7 @@ HELP;
             ->class
         ;
 
-        $filename = $dir . 'mysql4-install-' . $this->getConfigVersion() . '.php';
+        $filename = $dir . 'install-' . $this->getConfigVersion() . '.php';
         if (!is_file($filename)) {
             file_put_contents($filename, $this->getTemplate('setup_class', array(
                 'Mage_Core_Model_Resource_Setup' => $setupClass
@@ -1876,12 +1876,12 @@ HELP;
         $models = $config->global->models;
 
         if (!$models->{strtolower($this->getModuleName())}->resourceModel) {
-            $models->{strtolower($this->getModuleName())}->addChild('resourceModel', strtolower($this->getModuleName()) . '_mysql4');
-            $mysql4 = $models->addChild(strtolower($this->getModuleName()) . '_mysql4');
-            $mysql4->addChild('class', $this->getModuleName() . '_Model_Mysql4');
-            $mysql4->addChild('entities');
+            $models->{strtolower($this->getModuleName())}->addChild('resourceModel', strtolower($this->getModuleName()) . '_resource');
+            $resource = $models->addChild(strtolower($this->getModuleName()) . '_resource');
+            $resource->addChild('class', $this->getModuleName() . '_Model_Resource');
+            $resource->addChild('entities');
             $this->writeConfig();
-            @mkdir($dir = $dir . 'Mysql4/');
+            @mkdir($dir = $dir . 'Resource/');
         }
 
         $this->_processReloadConfig();
@@ -2972,7 +2972,7 @@ BEGIN mysql4_entity_class
  * Resource Model of {Name}
  * @package {Module_Name}
  */
-class {Module_Name}_Model_Mysql4_{Name} extends Mage_Core_Model_Mysql4_Abstract
+class {Module_Name}_Model_Resource_{Name} extends Mage_Core_Model_Resource_Db_Abstract
 {
 
 // {COMPANY_NAME} Tag NEW_CONST
@@ -3001,7 +3001,7 @@ BEGIN mysql4_collection_class
  * Collection of {Name}
  * @package {Module_Name}
  */
-class {Module_Name}_Model_Mysql4_{Name}_Collection extends Mage_Core_Model_Mysql4_Collection_Abstract
+class {Module_Name}_Model_Resource_{Name}_Collection extends Mage_Core_Model_Resource_Db_Collection_Abstract
 {
 
 // {COMPANY_NAME} Tag NEW_CONST
