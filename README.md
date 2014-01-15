@@ -1,12 +1,14 @@
 # The Installer
 
-PERSONNAL USAGE ONLY - For professional or commercial use, ask.
+The Installer is under the General Public License. See the `COPYING` for further information.
 
 ## What's that?
 
 The "Installer" is a *simple* shell which allows you to create custom modules on Magento.
 
-NOTE: This is the first version. Any idea for the second one?
+### V2
+
+The second version will be developped with the Console component of Symfony. If you want help us to build it, let me know! <jacques ON bodin-hullin DOT net>
 
 ## Install
 
@@ -22,11 +24,11 @@ Each time I need to use The Installer, I've a git repository.
 Because it's always a Magento project and I always use git as SCM.
 
 ```sh
-$ git config jbh-installer.company-name "The Company"
-$ git config jbh-installer.company-name-short "company"
-$ git config jbh-installer.user-name "John Doe"
-$ git config jbh-installer.user-email "john.doe@example.org"
-$ git config jbh-installer.company-url "http://example.org"
+git config jbh-installer.company-name "The Company"
+git config jbh-installer.company-name-short "company"
+git config jbh-installer.user-name "John Doe"
+git config jbh-installer.user-email "john.doe@example.org"
+git config jbh-installer.company-url "http://example.org"
 ```
 
 You can use the following configuration path:
@@ -41,15 +43,13 @@ You can use the following configuration path:
 *   `design`: The project's design. "base_default" as default.
 *   `locales`: The project's locales. "fr_FR,en_US" as default.
 
+In the lastest version the Installer will ask you those information.
+
 ### Binary
 
 You can use the binary `bin/Installer`.
 
 Just create a simple symlink link.
-
-#### Installation example
-
-
 
 ### Run it!
 
@@ -59,7 +59,7 @@ With your shell, go under your magento dir, like that :
 
 Then run the Installer! (with the function above)
 
-    $ jbh
+    $ installer
     The Installer - by jacquesbh
     > 
 
@@ -117,7 +117,7 @@ Type `?`!
 
 ### Example
 
-    $ jbh
+    $ installer
     The Installer - by jacquesbh
     > mod jbh demo local
     Using: Jbh_Demo in local
@@ -154,60 +154,53 @@ Easy, isn't it ?
 class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
 {
 
-// Jacques Bodin-Hullin Tag NEW_CONST
+// Company Tag NEW_CONST
 
     /**
      * short_description_here
-     * @access protected
      * @var 
      */
     protected $_iAmProtected = null;
 
     /**
      * short_description_here
-     * @access protected
      * @var int
      */
     protected $_meToo = 1;
 
     /**
      * short_description_here
-     * @access public
      * @var 
      */
     public $iAmPublic = null;
 
     /**
      * short_description_here
-     * @access public
      * @var array
      */
     public $meToo = array();
 
     /**
      * short_description_here
-     * @access public
      * @var null
      */
     public $iAmNull = null;
 
     /**
      * short_description_here
-     * @access public
      * @var string
      */
     public $iAmAString = 'foo';
 
     /**
      * short_description_here
-     * @access protected
      * @var bool
      */
     protected $_iAmBoolean = false;
 
-// Jacques Bodin-Hullin Tag NEW_VAR
+// Company Tag NEW_VAR
 
-// Jacques Bodin-Hullin Tag NEW_METHOD
+// Company Tag NEW_METHOD
 
 }
 ```
@@ -253,11 +246,11 @@ class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
      */
     const I_AM_BOOLEAN = true;
 
-// Jacques Bodin-Hullin Tag NEW_CONST
+// Company Tag NEW_CONST
 
-// Jacques Bodin-Hullin Tag NEW_VAR
+// Company Tag NEW_VAR
 
-// Jacques Bodin-Hullin Tag NEW_METHOD
+// Company Tag NEW_METHOD
 
 }
 ```
@@ -287,13 +280,12 @@ class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
 class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
 {
 
-// Jacques Bodin-Hullin Tag NEW_CONST
+// Company Tag NEW_CONST
 
-// Jacques Bodin-Hullin Tag NEW_VAR
+// Company Tag NEW_VAR
 
     /**
      * short_description_here
-     * @access protected
      * @return 
      */
     protected function _iAmProtected()
@@ -303,7 +295,6 @@ class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
 
     /**
      * short_description_here
-     * @access public
      * @return 
      */
     public function iAmPublic()
@@ -313,7 +304,6 @@ class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
 
     /**
      * short_description_here
-     * @access public
      * @return bool
      */
     public function iReturnsBool()
@@ -323,7 +313,6 @@ class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
 
     /**
      * short_description_here
-     * @access public
      * @return Varien_Object
      */
     public function iReturnsObject()
@@ -333,7 +322,6 @@ class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
 
     /**
      * short_description_here
-     * @access public
      * @return string
      */
     public function iCallMyParent()
@@ -344,7 +332,6 @@ class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
 
     /**
      * short_description_here
-     * @access public
      * @return 
      */
     public function iHaveArgs($customer)
@@ -354,7 +341,6 @@ class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
 
     /**
      * short_description_here
-     * @access public
      * @return bool
      */
     public function iHaveArgsAndIReturnsBool($flag)
@@ -364,7 +350,6 @@ class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
 
     /**
      * short_description_here
-     * @access protected
      * @return string
      */
     protected function _iHaveArgsIReturnsStringICallDad($order)
@@ -373,7 +358,7 @@ class Jbh_Tmp_Model_Foo extends Mage_Core_Model_Abstract
         // Code here
     }
 
-// Jacques Bodin-Hullin Tag NEW_METHOD
+// Company Tag NEW_METHOD
 
 }
 ```
