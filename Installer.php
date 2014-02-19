@@ -84,6 +84,7 @@ class Installer
         self::$_config->path                = $this->getGit('path', '');
         self::$_config->license             = $this->getGit('license', '');
         self::$_config->user_email          = $this->getGit('user-email');
+        self::$_config->user_twitter        = $this->getGit('user-twitter');
         self::$_config->user_name           = $this->getGit('user-name');
         self::$_config->design              = $this->getGit('design', 'base_default');
         self::$_config->company_name        = $this->getGit('company-name');
@@ -126,6 +127,14 @@ class Installer
                 self::$_config->user_email = $this->prompt('Your email?');
             } while (empty(self::$_config->user_email));
             exec(GIT_PATH . ' config jbh-installer.user-email "' . self::$_config->user_email.'"');
+        }
+
+        // The user's twitter
+        if (empty(self::$_config->user_twitter)) {
+            do {
+                self::$_config->user_twitter = $this->prompt('Your twitter?');
+            } while (empty(self::$_config->user_twitter));
+            exec(GIT_PATH . ' config jbh-installer.user-twitter "' . self::$_config->user_twitter.'"');
         }
 
         // The user's name
@@ -2582,11 +2591,12 @@ HELP;
             '{Module_Name}'     => $this->getModuleName(),
             '{module_name}'     => strtolower($this->getModuleName()),
             '{LICENSE}'         => self::$_config->license,
-            '{USER_NAME}'       => utf8_encode(self::$_config->user_name),
+            '{USER_NAME}'       => self::$_config->user_name,
             '{USER_EMAIL}'      => self::$_config->user_email,
+            '{USER_TWITTER}'    => self::$_config->user_twitter,
             '{Namespace}'       => $this->_namespace,
             '{date_year}'       => date('Y'),
-            '{COMPANY_NAME}'    => utf8_encode(self::$_config->company_name),
+            '{COMPANY_NAME}'    => self::$_config->company_name,
             '{COMPANY_URL}'     => self::$_config->company_url
         );
 
@@ -2729,7 +2739,7 @@ BEGIN copyright
  * This file is part of {Module_Name} for Magento.
  *
  * @license {LICENSE}
- * @author {USER_NAME} <{USER_EMAIL}>
+ * @author {USER_NAME} <{USER_EMAIL}> <{USER_TWITTER}>
  * @category {Namespace}
  * @package {Module_Name}
  * @copyright Copyright (c) {date_year} {COMPANY_NAME} ({COMPANY_URL})
