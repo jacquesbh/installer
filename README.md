@@ -94,6 +94,7 @@ Type `?`!
      | COMMAND              | ALIAS                 | PARAMETERS                                |
      |----------------------|-----------------------|-------------------------------------------|
      | setup                | sql set               |                                           |
+     | data                 |                       | [[from] to]                               |
      | upgrade              | up                    | [from] to                                 |
      | event                |                       | name model method where                   |
      | cron                 |                       | identifier 1 2 3 4 5 model method         |

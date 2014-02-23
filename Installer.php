@@ -223,6 +223,7 @@ class Installer
  | COMMAND              | ALIAS                 | PARAMETERS                                |
  |----------------------|-----------------------|-------------------------------------------|
  | setup                | sql set               |                                           |
+ | data                 |                       | [[from] to]                               |
  | upgrade              | up                    | [from] to                                 |
  | event                |                       | name model method where                   |
  | cron                 |                       | identifier 1 2 3 4 5 model method         |
@@ -402,6 +403,10 @@ HELP;
             case 'sql':
                 $this->_processModule();
                 $this->_processSetupSql($params);
+                break;
+            case 'data':
+                $this->_processModule();
+                $this->_processData($params);
                 break;
             case 'upgrade':
             case 'up':
@@ -1652,6 +1657,65 @@ HELP;
             file_put_contents($filename, $this->getTemplate('setup_class', array(
                 'Mage_Core_Model_Resource_Setup' => $setupClass
             )));
+        }
+
+        $this->_processReloadConfig();
+
+        $this->setLast(__FUNCTION__);
+    }
+
+    protected function _processData(array $params)
+    {
+        list($dir, $created) = $this->getModuleDir('data', true);
+
+        $config = $this->getConfig();
+        if (!isset($config->global)) {
+            $config->addChild('global');
+        }
+        $global = $config->global;
+        if (!$global->resources || !$global->resources->{strtolower($this->getModuleName()) . '_setup'}) {
+            if (!$resources = $global->resources) {
+                $resources = $global->addChild('resources');
+            }
+            if (!$moduleSetup = $resources->{strtolower($this->getModuleName()) . '_setup'}) {
+                $moduleSetup = $resources->addChild(strtolower($this->getModuleName()) . '_setup');
+            }
+
+            $setup = $moduleSetup->addChild('setup');
+            $setup->addChild('module', $this->getModuleName());
+            $setup->addChild('class', 'Mage_Core_Model_Resource_Setup');
+            $connection = $moduleSetup->addChild('connection');
+            $connection->addChild('use', 'core_setup');
+            $this->writeConfig();
+        }
+
+        $dir = $dir . strtolower($this->getModuleName()) . '_setup/';
+
+        if (!is_dir($dir)) {
+            mkdir($dir);
+        }
+
+        $version = $this->getConfigVersion();
+        if (!empty($params)) {
+            if (count($params) == 1) {
+                $to = array_shift($params);
+                $from = $version;
+            } else {
+                $from = array_shift($params);
+                $to = array_shift($params);
+            }
+
+            $filename = $dir . 'data-upgrade-' . $from . '-' . $to . '.php';
+            if (!is_file($filename)) {
+                file_put_contents($filename, $this->getTemplate('data_file', array()));
+            }
+
+            echo 'Upgrade data from ' . red() . $from . white() . ' to ' . red() . $to . white() . ".\n";
+        } else {
+            $filename = $dir . 'data-install-' . $version . '.php';
+            if (!is_file($filename)) {
+                file_put_contents($filename, $this->getTemplate('data_file', array()));
+            }
         }
 
         $this->_processReloadConfig();
@@ -2930,6 +2994,14 @@ BEGIN constructor_method
         // Code here
     }
 END constructor_method
+
+BEGIN data_file
+<_?php
+{COPYRIGHT}
+
+// your_code_here
+
+END data_file
 
 BEGIN setup_class
 <_?php
