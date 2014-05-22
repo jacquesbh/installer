@@ -2610,7 +2610,10 @@ HELP;
             $dom = new DOMDocument('1.0');
             $dom->preserveWhiteSpace = false;
             $dom->formatOutput = 4;
-            $dom->loadXML($this->_mageConfig->asXML());
+            if (!$dom->loadXML($this->_mageConfig->asXML())) {
+                echo red() . "Invalid XML. Could not write config.\n";
+                return false;
+            }
             $tidy = tidy_parse_string($dom->saveXml(), array(
                 'indent' => true,
                 'input-xml' => true,
