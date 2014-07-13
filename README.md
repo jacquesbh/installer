@@ -12,6 +12,18 @@ The second version will be developped with the Console component of Symfony. If 
 
 ## Install
 
+### On UNIX
+
+Puppet file: <https://github.com/monsieurbiz/vagrant-magento/blob/master/puppet/modules/tools/manifests/installer.pp>
+
+    # step by step
+    git clone git://github.com/jacquesbh/installer.git /usr/local/src/installer
+    ln -s /usr/local/src/installer/bin/Installer /usr/local/bin/installer
+    
+Don't forget to pull sometimes ;)
+
+    cd /usr/local/src/Installer && git pull
+
 ### On Windows
 
 ... Sorry dude ;)
