@@ -100,14 +100,19 @@ class Installer
 
         // Execution path
         if (!is_dir($this->getAppDir())) {
-            echo red() . "Bad execution path.\n" . white();
-            exit;
+            echo red() . "Directory {$this->getAppDir()} not found. Create? [Y/N]" . white();
+            do {
+                $_createAppDir = $this->_read(false);
+                if (strtoupper($_createAppDir) === 'N') {
+                    exit;
+                }
+            } while (strtoupper($_createAppDir) !== 'Y');
+            mkdir($this->getAppDir(), 0777, true);
         }
 
         // Tidy required
         if (!function_exists('tidy_parse_string')) {
-            echo red() . "Tidy is required !
-	    http://tidy.sourceforge.net/\n" . white();
+            echo red() . "Tidy is required ! http://tidy.sourceforge.net/\n" . white();
             exit;
         }
 
