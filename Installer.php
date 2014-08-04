@@ -106,7 +106,8 @@ class Installer
 
         // Tidy required
         if (!function_exists('tidy_parse_string')) {
-            echo red() . "Tidy is required ! http://tidy.sourceforge.net/\n";
+            echo red() . "Tidy is required !
+	    http://tidy.sourceforge.net/\n" . white();
             exit;
         }
 
