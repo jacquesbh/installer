@@ -560,7 +560,7 @@ HELP;
 
         $dir = $this->getMiscDir();
         if (!is_dir($dir)) {
-            mkdir($dir);
+            mkdir($dir, 0777, true);
         }
 
         $filename = $dir . '/' . $name . '.php';
@@ -626,7 +626,7 @@ HELP;
         foreach ($names as $rep) {
             $dir .= $rep . '/';
             if (!is_dir($dir)) {
-                mkdir($dir);
+                mkdir($dir, 0777, true);
             }
         }
 
@@ -716,7 +716,7 @@ HELP;
         foreach ($names as $rep) {
             $dir .= $rep . '/';
             if (!is_dir($dir)) {
-                mkdir($dir);
+                mkdir($dir, 0777, true);
             }
         }
 
@@ -1571,7 +1571,7 @@ HELP;
         foreach ($names as $name) {
             if (!is_dir($dir = $dir . $name . '/')) {
                 if (!$noFiles) {
-                    mkdir($dir);
+                    mkdir($dir, 0777, true);
                 }
             }
         }
@@ -1588,7 +1588,7 @@ HELP;
         foreach ($names as $name) {
             if (!is_dir($dir = $dir . $name . '/')) {
                 if (!$noFiles) {
-                    mkdir($dir);
+                 mkdir($dir, 0777, true);
                 }
             }
         }
@@ -1603,7 +1603,7 @@ HELP;
 
         if (!is_dir($dir = $dir . $lastName . '/')) {
             if (!$noFiles) {
-                mkdir($dir);
+                mkdir($dir, 0777, true);
             }
         }
         if (!$noFiles) {
@@ -1702,7 +1702,7 @@ HELP;
         $dir = $dir . strtolower($this->getModuleName()) . '_setup/';
 
         if (!is_dir($dir)) {
-            mkdir($dir);
+            mkdir($dir, 0777, true);
         }
 
         $version = $this->getConfigVersion();
@@ -1761,7 +1761,7 @@ HELP;
         $dir = $dir . strtolower($this->getModuleName()) . '_setup/';
 
         if (!is_dir($dir)) {
-            mkdir($dir);
+            mkdir($dir, 0777, true);
         }
 
         $setupClass = (string) $config
@@ -1828,7 +1828,7 @@ HELP;
 
             foreach ($dirs as $d) {
                 if (!is_dir($dir = $dir . $d . '/')) {
-                    mkdir($dir);
+                    mkdir($dir, 0777, true);
                 }
             }
 
@@ -1922,7 +1922,7 @@ HELP;
             foreach ($this->getLocales() as $locale) {
                 $dir = $this->getAppDir() . 'locale/' . $locale . '/';
                 if (!is_dir($dir)) {
-                    mkdir($dir);
+                    mkdir($dir, 0777, true);
                 }
                 touch($dir . $this->getModuleName() . '.csv');
             }
@@ -2013,7 +2013,7 @@ HELP;
         foreach ($names as $rep) {
             $dir .= $rep . '/';
             if (!is_dir($dir)) {
-                mkdir($dir);
+                mkdir($dir, 0777, true);
             }
         }
 
@@ -2074,7 +2074,7 @@ HELP;
         foreach ($names as $rep) {
             $dir .= $rep . '/';
             if (!is_dir($dir)) {
-                mkdir($dir);
+                mkdir($dir, 0777, true);
             }
         }
 
@@ -2244,7 +2244,7 @@ HELP;
         foreach ($names as $rep) {
             $dir .= $rep . '/';
             if (!is_dir($dir)) {
-                mkdir($dir);
+                mkdir($dir, 0777, true);
             }
         }
 
@@ -2265,7 +2265,7 @@ HELP;
             foreach ($dirs as $rep) {
                 $dir .= strtolower($rep) . '/';
                 if (!is_dir($dir)) {
-                    mkdir($dir);
+                    mkdir($dir, 0777, true);
                 }
             }
             $phtmlFilepath = strtolower(implode('/', $dirs) . '/' . $name . '.phtml');
@@ -2325,7 +2325,7 @@ HELP;
         foreach ($names as $rep) {
             $dir .= $rep . '/';
             if (!is_dir($dir)) {
-                mkdir($dir);
+                mkdir($dir, 0777, true);
             }
         }
 
@@ -2692,7 +2692,7 @@ HELP;
     {
         $dir = $this->getAppDir() . 'code/' . $this->_pool . '/';
         if (!is_dir($dir)) {
-            mkdir($dir);
+            mkdir($dir, 0777, true);
         }
         return $dir;
     }
@@ -2701,7 +2701,7 @@ HELP;
     {
         $dir = $this->getPoolDir() . $this->_namespace . '/';
         if (!is_dir($dir)) {
-            mkdir($dir);
+            mkdir($dir, 0777, true);
         }
         return $dir;
     }
@@ -2715,7 +2715,7 @@ HELP;
         }
         $created = false;
         if (!is_dir($dir)) {
-            mkdir($dir);
+            mkdir($dir, 0777, true);
             $created = true;
         }
         return (is_null($name) || !$getCreated) ? $dir : array($dir, $created);
@@ -2733,7 +2733,7 @@ HELP;
         foreach ($names as $name) {
             $dir .= $name . '/';
             if (!is_dir($dir)) {
-                mkdir($dir);
+                mkdir($dir, 0777, true);
             }
         }
 
