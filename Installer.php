@@ -2556,7 +2556,7 @@ HELP;
                     $this->_useModman = true;
                     file_put_contents($modmanFilename,
                         $modmanFirstLine . "\n" .
-                        'app/etc/modules/' . $this->getModuleName() . '.xml app/etc/modules/' . $this->getModuleName() . "\n" .
+                        'app/etc/modules/' . $this->getModuleName() . '.xml app/etc/modules/' . $this->getModuleName() . ".xml\n" .
                         'app/code/' . $this->_pool . '/' . $this->_namespace . '/' . $this->_module . ' app/code/' . $this->_pool . '/' . $this->_namespace . '/' . $this->_module . "\n");
                 }
             } elseif (substr(file_get_contents($modmanFilename), 0, strlen($modmanFirstLine)) === $modmanFirstLine) {
