@@ -74,6 +74,8 @@ class Installer
 
     protected $_cli = true;
 
+    protected $_useModman = false;
+
     static protected $_config = null;
 
     public function __construct(array $argv, $useCmdLine = true)
@@ -107,7 +109,7 @@ class Installer
                     exit;
                 }
             } while (strtoupper($_createAppDir) !== 'Y');
-            mkdir($this->getAppDir(), 0777, true);
+            mkdir($this->getAppDir() . 'etc/modules', 0777, true);
         }
 
         // Tidy required
@@ -507,6 +509,13 @@ HELP;
         }
     }
 
+    protected function _addModmanLink($relativePath)
+    {
+        if (!$this->_useModman) {
+            return;
+        }
+        file_put_contents($this->getRootDir() . '/modman', "$relativePath $relativePath\n", FILE_APPEND);
+    }
     protected function _processAdminhtml(array $params)
     {
         $this->_processHelper(array('data', '-'));
@@ -1824,6 +1833,7 @@ HELP;
             $child->addChild('file', $file);
             $this->writeConfig();
             $dir = $this->getAppDir() . 'design/' . $where . '/';
+            $relativeDir = 'app/design/' . $where . '/';
 
             if ($this->_pool == 'community') {
                 $dirs = array('base', 'default');
@@ -1835,6 +1845,7 @@ HELP;
                 if (!is_dir($dir = $dir . $d . '/')) {
                     mkdir($dir, 0777, true);
                 }
+                $relativeDir = $relativeDir . $d . '/';
             }
 
             $dirs = array('layout', 'etc', 'template');
@@ -1847,6 +1858,7 @@ HELP;
 
             if (!file_exists($dir . 'layout/' . $file)) {
                 file_put_contents($dir . 'layout/' . $file, $this->getTemplate('layout_xml'));
+                $this->_addModmanLink($relativeDir . 'layout/' . $file);
             }
         }
 
@@ -2206,6 +2218,7 @@ HELP;
             $finalDir = $emailsDir . '/' . $moduleName;
             if (!is_dir($finalDir)) {
                 mkdir($finalDir);
+                $this->_addModmanLink('app/locale/' . $locale . '/template/email/' . $moduleName);
             }
             $filename = $finalDir . '/' . $name . $ext;
             if (!is_file($filename)) {
@@ -2267,11 +2280,16 @@ HELP;
             $dir = $this->getDesignDir('frontend', 'template');
             $dirs = $names;
             array_unshift($dirs, strtolower($this->getModuleName()));
+            $designDirCreated = false;
             foreach ($dirs as $rep) {
                 $dir .= strtolower($rep) . '/';
                 if (!is_dir($dir)) {
                     mkdir($dir, 0777, true);
+                    $designDirCreated = true;
                 }
+            }
+            if ($designDirCreated) {
+                $this->_addModmanLink($this->getDesignDir('frontend', 'template', true) . strtolower($this->getModuleName()));
             }
             $phtmlFilepath = strtolower(implode('/', $dirs) . '/' . $name . '.phtml');
             $phtmlFilename = $dir . strtolower($name) . '.phtml';
@@ -2530,6 +2548,20 @@ HELP;
                     )
                 );
             }
+            
+            $modmanFilename = $this->getRootDir() . '/modman';
+            $modmanFirstLine = '#' . $this->getModuleName();
+            if (!is_file($modmanFilename)) {
+                if (strtoupper($this->prompt('Create modman file? [Y/N]')) === 'Y') {
+                    $this->_useModman = true;
+                    file_put_contents($modmanFilename,
+                        $modmanFirstLine . "\n" .
+                        'app/etc/modules/' . $this->getModuleName() . '.xml app/etc/modules/' . $this->getModuleName() . "\n" .
+                        'app/code/' . $this->_pool . '/' . $this->_namespace . '/' . $this->_module . ' app/code/' . $this->_pool . '/' . $this->_namespace . '/' . $this->_module . "\n");
+                }
+            } elseif (substr(file_get_contents($modmanFilename), 0, strlen($modmanFirstLine)) === $modmanFirstLine) {
+                $this->_useModman = true;
+            }
 
             $this->_mageConfig = null;
 
@@ -2686,6 +2718,12 @@ HELP;
     {
         return self::$_config->pwd . '/misc/';
     }
+    
+    public function getRootDir()
+    {
+        $path = trim(self::$_config->path, '/');
+        return self::$_config->pwd . (!empty($path) ? '/' . $path : '') . '/';
+    }
 
     public function getAppDir()
     {
@@ -2726,9 +2764,9 @@ HELP;
         return (is_null($name) || !$getCreated) ? $dir : array($dir, $created);
     }
 
-    public function getDesignDir($where, $child = '')
+    public function getDesignDir($where, $child = '', $relative = false)
     {
-        $dir = $this->getAppDir() . 'design/' . $where . '/';
+        $dir = ($relative ? 'app/' : $this->getAppDir()) . 'design/' . $where . '/';
         $names = explode('_', self::$_config->design);
 
         if ($child) {
