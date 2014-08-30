@@ -2540,8 +2540,12 @@ HELP;
             if (!is_file($filename)) {
                 file_put_contents($filename, $this->getTemplate('config_xml'));
                 file_put_contents($filename, $this->getTemplate('config_xml'));
+                $etcModulesDir = $this->getAppDir() . 'etc/modules';
+                if (!is_dir($etcModulesDir)) {
+                	mkdir($etcModulesDir, 0777, true);
+                }
                 file_put_contents(
-                    $this->getAppDir() . 'etc/modules/' . $this->getModuleName() . '.xml',
+                    $etcModulesDir . '/' . $this->getModuleName() . '.xml',
                     $this->getTemplate(
                         'module_xml',
                         array('{pool}' => $this->_pool)
