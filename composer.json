@@ -1,0 +1,14 @@
+{
+    "name": "jacquesbh/installer",
+    "license": "GPL v3",
+    "description": "PHP command line tool for Magento extension development and scaffolding",
+    "keywords": [
+        "installer", "Magento"
+    ],
+    "authors":[
+        {
+            "name":"Jacques Bodin-Hullin"
+        }
+    ],
+    "bin": ["bin/Installer"]
+}
