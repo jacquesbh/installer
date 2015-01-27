@@ -2906,7 +2906,7 @@ BEGIN system_xml
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
-                        <field_name translate="label" module="{module}">
+                        <field_name translate="label comment" module="{module}">
                             <label>Label</label>
                             <frontend_type>text</frontend_type>
                             <!--
