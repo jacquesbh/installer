@@ -2901,6 +2901,7 @@ BEGIN system_xml
                 <group_name translate="label" module="{module}">
                     <label>Label Group</label>
                     <frontend_type>text</frontend_type>
+                    <expanded>1</expanded>
                     <sort_order>10</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
