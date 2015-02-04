@@ -1161,10 +1161,12 @@ HELP;
         }
 
         // module(s)
-        if (!$args->module) {
-            if ($where == 'frontend') {
+        if ($where == 'frontend') {
+            if (!$args->module) {
                 $args->addChild('module', $this->getModuleName());
-            } else {
+            }
+        } else {
+            if (!$args->modules) {
                 // We add the modules node for admin router as if we rewrite a controller
                 $modules = $args->addChild('modules');
                 $modules
@@ -1175,8 +1177,8 @@ HELP;
         }
 
         // frontName
-        if (!$args->frontName) {
-            ($where == 'frontend') ? $args->addChild('frontName', $frontName) : '';
+        if (!$args->frontName && $where == 'frontend') {
+            $args->addChild('frontName', $frontName);
         }
 
         $this->writeConfig();
