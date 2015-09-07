@@ -3073,6 +3073,7 @@ BEGIN setup_class
 
 try {
 
+    /* @var $conn Varien_Db_Adapter_Interface */
     /* @var $installer Mage_Core_Model_Resource_Setup */
     $installer = $this;
     $installer->startSetup();
@@ -3083,6 +3084,7 @@ try {
 
 } catch (Exception $e) {
     // Silence is golden
+    //throw $e;
 }
 
 END setup_class
@@ -3389,7 +3391,7 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Form_Contai
         $this->_controller = '{controller}';
         $this->_mode       = 'edit';
 
-        $this->setFormActionUrl($this->getUrl('*/*/save', array('id' => $this->_getObject()->getId())));
+        $this->setFormActionUrl($this->getUrl('*/*/save', ['id' => $this->_getObject()->getId()]));
 
         return $this;
     }
@@ -3444,33 +3446,33 @@ class {Module_Name}_Block_{Name} extends Mage_Adminhtml_Block_Widget_Form
      */
     protected function _prepareForm()
     {
-        $form = new Varien_Data_Form(array(
+        $form = new Varien_Data_Form([
             'id'        => 'edit_form',
             'action'    => $this->getData('action'),
             'method'    => 'post',
             'enctype'   => 'multipart/form-data'
-        ));
+        ]);
 
         $entity = Mage::registry('current_{current}');
         $form->setDataObject($entity);
 
         if ($entity->getId()) {
-            $form->addField('{id_field}', 'hidden', array(
+            $form->addField('{id_field}', 'hidden', [
                 'name' => '{id_field}'
-            ));
+            ]);
         }
 
-        $fieldset = $form->addFieldset('general', array(
+        $fieldset = $form->addFieldset('general', [
             'legend' => Mage::helper('{module_name}')->__('General Information')
-        ));
+        ]);
 
         // Name field
-        $fieldset->addField('name', 'text', array(
+        $fieldset->addField('name', 'text', [
             'name' => 'name',
             'label' => Mage::helper('{module_name}')->__('Name'),
             'title' => Mage::helper('{module_name}')->__('Name'),
             'required' => true
-        ));
+        ]);
 
         $form->setUseContainer(true);
         $this->setForm($form);
@@ -3703,15 +3705,15 @@ BEGIN email_method
 
         /* @var $emailTemplate Mage_Core_Model_Email_Template */
         return $emailTemplate
-            ->setDesignConfig(array('area' => 'frontend'))
+            ->setDesignConfig(['area' => 'frontend'])
             ->sendTransactional(
                 Mage::getStoreConfig(self::CONFIG_KEY_EMAIL_{NAME}),
                 Mage::getStoreConfig('contacts/email/sender_email_identity'),
                 $customer->getEmail(),
                 null,
-                array(
+                [
                     'customer' => $customer
-                )
+                ]
             );
     }
 END email_method
