@@ -2832,7 +2832,8 @@ HELP;
         if ($usePrompt) {
             $prompt = white() . $this->getModuleName() . red() . '> ' . white();
         }
-        $line = trim(readline($prompt));
+        echo $prompt;
+        $line = trim(readline());
         if (!empty($line)) {
             readline_add_history($line);
         }
