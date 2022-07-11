@@ -12,6 +12,18 @@ The second version will be developped with the Console component of Symfony. If 
 
 ## Install
 
+### Via Docker
+
+Run the following:
+
+`cd docker-binary && docker build --tag installer:latest .`
+
+Then you can use the docker image like this where you want to use the Installer:
+
+```
+docker run --rm -ti -v $PWD:/work installer:latest
+```
+
 ### On UNIX
 
 Puppet file: <https://github.com/monsieurbiz/vagrant-magento/blob/master/puppet/modules/tools/manifests/installer.pp>
